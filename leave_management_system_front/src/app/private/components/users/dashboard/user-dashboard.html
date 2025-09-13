@@ -1,0 +1,118 @@
+
+<div class="app-container">
+  <app-user-nav-bar></app-user-nav-bar>
+  <div class="main-content dashboard-main">
+    <app-user-side-bar></app-user-side-bar>
+    <div class="dashboard-content">
+      
+      <!-- Loading Indicator -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading dashboard data...</p>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error && !isLoading" class="error-container">
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ error }}
+          <button class="btn btn-primary" (click)="refreshData()">
+            <i class="fas fa-refresh"></i> Try Again
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div *ngIf="!isLoading && !error">
+        <h2>Welcome, {{ employeeData.name || 'User' }}!</h2>
+        <div class="dashboard-section">
+          <h3>👤 User Information</h3>
+          <div class="user-info-grid">
+          <div class="info-item">
+            <div class="info-icon">👔</div>
+            <div class="info-details">
+              <span class="info-label">Role</span>
+              <span class="info-value">{{ employeeData.role }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">🏢</div>
+            <div class="info-details">
+              <span class="info-label">Department</span>
+              <span class="info-value">{{ employeeData.department }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">📧</div>
+            <div class="info-details">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ employeeData.email }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">📱</div>
+            <div class="info-details">
+              <span class="info-label">Phone</span>
+              <span class="info-value">{{ employeeData.phone }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">📅</div>
+            <div class="info-details">
+              <span class="info-label">Join Date</span>
+              <span class="info-value">{{ employeeData.joinDate }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">🎯</div>
+            <div class="info-details">
+              <span class="info-label">Experience</span>
+              <span class="info-value">{{ employeeData.experience }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-section">
+        <h3>Leave Summary</h3>
+        <table class="leave-table">
+          <tr>
+            <th>Type</th>
+            <th>Total</th>
+            <th>Used</th>
+            <th>Remaining</th>
+          </tr>
+          <tr>
+            <td>Annual</td>
+            <td>{{ leaveData.annual.total }}</td>
+            <td>{{ leaveData.annual.used }}</td>
+            <td>{{ leaveData.annual.remaining }}</td>
+          </tr>
+          <tr>
+            <td>Sick</td>
+            <td>{{ leaveData.sick.total }}</td>
+            <td>{{ leaveData.sick.used }}</td>
+            <td>{{ leaveData.sick.remaining }}</td>
+          </tr>
+          <tr>
+            <td>Personal</td>
+            <td>{{ leaveData.personal.total }}</td>
+            <td>{{ leaveData.personal.used }}</td>
+            <td>{{ leaveData.personal.remaining }}</td>
+          </tr>
+        </table>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="dashboard-section">
+        <h3>Quick Actions</h3>
+        <div class="dashboard-actions">
+          <button class="action-btn" (click)="navigateTo('/leaverequests')">Request Leave</button>
+          <button class="action-btn" (click)="navigateTo('/calender')">View Calendar</button>
+          <button class="action-btn" (click)="navigateTo('/profile')">My Profile</button>
+          <button class="action-btn" (click)="navigateTo('/approves')">Approvals</button>
+        </div>
+      </div>
+      </div> <!-- End main content div -->
+    </div>
+  </div>
+</div>

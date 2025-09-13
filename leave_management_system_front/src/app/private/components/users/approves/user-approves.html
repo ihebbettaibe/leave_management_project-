@@ -1,0 +1,328 @@
+<app-user-nav-bar></app-user-nav-bar>
+<div class="app-shell">
+  <app-user-side-bar></app-user-side-bar>
+
+  <div class="app-container">
+    <app-user-nav-bar></app-user-nav-bar>
+    <div class="main-content">
+      <app-user-side-bar></app-user-side-bar>
+
+      <!-- Leave Statistics Content -->
+      <div class="leave-statistics-container">
+        <div class="page-header">
+          <h1 class="page-title">Leave Statistics</h1>
+        </div>
+
+        <!-- Statistics Cards and Charts Row -->
+        <div class="stats-row">
+          <!-- Left Column - Statistics Cards -->
+          <div class="stats-column">
+            <h3 class="section-title">Leave Statistics</h3>
+            <div class="stats-grid">
+              <div class="stat-card" *ngFor="let stat of leaveStats">
+                <div
+                  class="stat-icon"
+                  [style.background-color]="stat.bgColor"
+                  [style.color]="stat.color"
+                >
+                  {{ stat.icon }}
+                </div>
+                <div class="stat-info">
+                  <div class="stat-label">{{ stat.type }}</div>
+                  <div class="stat-value">{{ stat.count }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column - Charts -->
+          <div class="charts-column">
+            <div class="chart-container">
+              <h3 class="section-title">Leave Allowance</h3>
+              <div class="chart-wrapper">
+                <div class="circular-chart allowance-chart">
+                  <svg viewBox="0 0 36 36" class="circular-chart-svg">
+                    <path
+                      class="circle-bg"
+                      d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      class="circle-progress allowance-progress"
+                      [attr.stroke-dasharray]="100 + ', 100'"
+                      d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div class="chart-center">
+                    <div class="chart-value">{{ leaveAllowance }}</div>
+                    <div class="chart-label">hrs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <h3 class="section-title">Leave Used</h3>
+              <div class="chart-wrapper">
+                <div class="circular-chart used-chart">
+                  <svg viewBox="0 0 36 36" class="circular-chart-svg">
+                    <path
+                      class="circle-bg"
+                      d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      class="circle-progress used-progress"
+                      [attr.stroke-dasharray]="
+                        getLeaveUsagePercentage() + ', 100'
+                      "
+                      d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div class="chart-center">
+                    <div class="chart-value">{{ leaveUsed }}</div>
+                    <div class="chart-label">hrs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions and Filters Row -->
+        <div class="actions-filters-row">
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <h3 class="section-title">Quick Actions</h3>
+            <div class="action-buttons">
+              <button
+                class="action-btn approve-btn"
+                (click)="approveAllPending()"
+              >
+                <span class="btn-icon">✓</span>
+                Approve All Pending
+              </button>
+              <button class="action-btn export-btn" (click)="exportData()">
+                <span class="btn-icon">📊</span>
+                Export Data
+              </button>
+              <button class="action-btn filter-btn" (click)="toggleFilters()">
+                <span class="btn-icon">🔍</span>
+                Show Filters
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filters-section">
+            <div class="filters-header">
+              <h3 class="section-title">
+                Filters ({{ filteredRequests.length }})
+              </h3>
+              <button class="clear-filters-btn" (click)="clearFilters()">
+                Clear Filters
+              </button>
+            </div>
+
+            <div class="filters-row" [class.show]="showFilters">
+              <div class="filter-group">
+                <select
+                  class="filter-select"
+                  [(ngModel)]="filters.leaveType"
+                  (ngModelChange)="onFilterChange('leaveType', $event.target.value)"
+                >
+                  <option value="all">Leave Type</option>
+                  <option
+                    *ngFor="let type of leaveTypes"
+                    [value]="type.toLowerCase()"
+                  >
+                    {{ type }}
+                  </option>
+                </select>
+
+                <select
+                  class="filter-select"
+                  [(ngModel)]="filters.status"
+                  (ngModelChange)="onFilterChange('status', $event)"
+                >
+                  <option value="all">Status</option>
+                  <option
+                    *ngFor="let status of statusOptions"
+                    [value]="status.toLowerCase()"
+                  >
+                    {{ status }}
+                  </option>
+                </select>
+
+                <select
+                  class="filter-select"
+                  [(ngModel)]="filters.dateRange"
+                  (ngModelChange)="onFilterChange('dateRange', $event)"
+                >
+                  <option value="all">Date Range</option>
+                  <option
+                    *ngFor="let range of dateRangeOptions"
+                    [value]="range.toLowerCase()"
+                  >
+                    {{ range }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+          <div class="table-header">
+            <div class="table-title">Leave Requests</div>
+            <div class="table-actions">
+              <button class="select-all-btn" (click)="selectAllRequests()">
+                {{
+                  selectedRequests.length === filteredRequests.length &&
+                  filteredRequests.length > 0
+                    ? "Deselect All"
+                    : "Select All"
+                }}
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="leave-table">
+              <thead>
+                <tr>
+                  <th class="checkbox-col">
+                    <input
+                      type="checkbox"
+                      [checked]="
+                        selectedRequests.length === filteredRequests.length &&
+                        filteredRequests.length > 0
+                      "
+                      (change)="selectAllRequests()"
+                    />
+                  </th>
+                  <th (click)="sortBy('employee')" class="sortable">
+                    Employee
+                    <span
+                      class="sort-icon"
+                      [class.active]="sortColumn === 'employee'"
+                    >
+                      {{
+                        sortColumn === "employee"
+                          ? sortDirection === "asc"
+                            ? "↑"
+                            : "↓"
+                          : "↕"
+                      }}
+                    </span>
+                  </th>
+                  <th (click)="sortBy('startDate')" class="sortable">
+                    Start
+                    <span
+                      class="sort-icon"
+                      [class.active]="sortColumn === 'startDate'"
+                    >
+                      {{
+                        sortColumn === "startDate"
+                          ? sortDirection === "asc"
+                            ? "↑"
+                            : "↓"
+                          : "↕"
+                      }}
+                    </span>
+                  </th>
+                  <th (click)="sortBy('endDate')" class="sortable">End Date</th>
+                  <th (click)="sortBy('duration')" class="sortable">
+                    Duration
+                  </th>
+                  <th (click)="sortBy('status')" class="sortable">Status</th>
+                  <th class="actions-col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let request of filteredRequests;
+                    trackBy: trackByRequestId
+                  "
+                  class="table-row"
+                  [class.selected]="isRequestSelected(request.id)"
+                >
+                  <td class="checkbox-col">
+                    <input
+                      type="checkbox"
+                      [checked]="isRequestSelected(request.id)"
+                      (change)="toggleRequestSelection(request.id)"
+                    />
+                  </td>
+                  <td class="employee-col">{{ request.employee }}</td>
+                  <td class="date-col">{{ request.startDate }}</td>
+                  <td class="date-col">{{ request.endDate }}</td>
+                  <td class="duration-col">{{ request.duration }}</td>
+                  <td class="status-col">
+                    <span
+                      class="status-badge"
+                      [class]="getStatusClass(request.status)"
+                    >
+                      {{ request.status }}
+                    </span>
+                  </td>
+                  <td class="actions-col">
+                    <div class="action-menu">
+                      <button
+                        class="action-menu-btn"
+                        (click)="showActionMenu($event, request.id)"
+                      >
+                        ⋮
+                      </button>
+                      <div class="action-dropdown">
+                        <button (click)="viewRequestDetails(request.id)">
+                          View Details
+                        </button>
+                        <button (click)="editRequest(request.id)">Edit</button>
+                        <button
+                          (click)="changeRequestStatus(request.id, 'Approved')"
+                          *ngIf="request.status !== 'Approved'"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          (click)="changeRequestStatus(request.id, 'Declined')"
+                          *ngIf="request.status !== 'Declined'"
+                        >
+                          Decline
+                        </button>
+                        <button
+                          (click)="deleteRequest(request.id)"
+                          class="danger"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state" *ngIf="filteredRequests.length === 0">
+            <div class="empty-icon">📋</div>
+            <h3>No leave requests found</h3>
+            <p>
+              Try adjusting your filters or check back later for new requests.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

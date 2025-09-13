@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./leave_management_system_front
+      dockerfile: Dockerfile
+    ports:
+      - "8080:4200"
+    volumes:
+      - ./leave_management_system_front:/app
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./leave-management-system_back
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./leave-management-system_back:/app
+    environment:
+      - NODE_ENV=development

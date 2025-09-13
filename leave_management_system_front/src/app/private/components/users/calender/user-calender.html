@@ -1,0 +1,150 @@
+<app-user-nav-bar></app-user-nav-bar>
+
+<div class="app-shell">
+  <app-user-side-bar></app-user-side-bar>
+  <div class="app-container">
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <h1 class="page-title">Congé</h1>
+
+        <div class="header-controls">
+          <div class="view-tabs">
+            <button
+              class="tab-button"
+              [class.active]="selectedView === 'calendar'"
+              (click)="setView('calendar')"
+            >
+              Calendrier
+            </button>
+            <button
+              class="tab-button"
+              [class.active]="selectedView === 'validation'"
+              (click)="setView('validation')"
+            >
+              Validation des demandes
+            </button>
+          </div>
+
+          <div class="header-filters">
+            <select class="filter-select" (change)="onDepartmentChange($event)">
+              <option value="">Vue calendrier</option>
+              <option value="hr">HR</option>
+              <option value="it">IT</option>
+            </select>
+
+            <select class="filter-select" (change)="onDepartmentChange($event)">
+              <option value="">Département</option>
+              <option value="hr">HR</option>
+              <option value="it">IT</option>
+            </select>
+
+            <select class="filter-select" (change)="onMonthChange($event)">
+              <option value="">Mois</option>
+              <option value="1">Janvier</option>
+              <option value="2">Février</option>
+              <option value="3">Mars</option>
+              <option value="4">Avril</option>
+              <option value="5">Mai</option>
+              <option value="6">Juin</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-content">
+        <div class="calendar-navigation">
+          <button class="nav-button" (click)="previousMonth()">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+          </button>
+
+          <h2 class="calendar-month-year">{{ getCurrentMonthYear() }}</h2>
+
+          <button class="nav-button" (click)="nextMonth()">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div class="calendar-legend">
+          <div class="legend-item" *ngFor="let type of leaveTypes">
+            <div class="legend-dot" [style.background-color]="type.color"></div>
+            <span class="legend-label">{{ type.label }}</span>
+          </div>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="calendar-header-row">
+            <div class="day-header" *ngFor="let day of days">{{ day }}</div>
+          </div>
+
+          <div class="calendar-body">
+            <div
+              class="calendar-day"
+              *ngFor="let day of calendarDays"
+              [class.other-month]="!day.isCurrentMonth"
+              [class.today]="day.isToday"
+            >
+              <div class="day-number">{{ day.dayNumber }}</div>
+
+              <div class="day-events">
+                <ng-container *ngFor="let event of events">
+                  <div
+                    *ngIf="
+                      day.date >= event.startDate && day.date <= event.endDate
+                    "
+                    class="event-item range"
+                    [style.background-color]="event.color"
+                    [style.border-top-left-radius]="
+                      day.date.getTime() === event.startDate.getTime()
+                        ? '6px'
+                        : '0'
+                    "
+                    [style.border-bottom-left-radius]="
+                      day.date.getTime() === event.startDate.getTime()
+                        ? '6px'
+                        : '0'
+                    "
+                    [style.border-top-right-radius]="
+                      day.date.getTime() === event.endDate.getTime()
+                        ? '6px'
+                        : '0'
+                    "
+                    [style.border-bottom-right-radius]="
+                      day.date.getTime() === event.endDate.getTime()
+                        ? '6px'
+                        : '0'
+                    "
+                    (click)="onEventClick(event)"
+                  >
+                    {{
+                      day.date.getTime() === event.startDate.getTime()
+                        ? event.title
+                        : ""
+                    }}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

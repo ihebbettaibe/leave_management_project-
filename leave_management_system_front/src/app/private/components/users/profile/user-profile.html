@@ -1,0 +1,259 @@
+<app-user-nav-bar></app-user-nav-bar>
+
+<div class="app-shell">
+  <div class="shell-content">
+    <app-user-side-bar></app-user-side-bar>
+
+    <div class="page-content">
+      <div class="container">
+        <div class="header">
+          <h1><i class="fas fa-user-circle"></i> Employee Profile</h1>
+          <div class="action-buttons">
+            <!--
+            <button class="btn btn-primary" onclick="editProfile()">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+            -->
+            <button class="btn btn-secondary" onclick="downloadProfile()">
+              <i class="fas fa-download"></i> Download PDF
+            </button>
+            <!--
+            <button class="btn btn-success" onclick="exportData()">
+              <i class="fas fa-file-export"></i> Export Data
+            </button>
+            -->
+          </div>
+        </div>
+
+        <div class="profile-main">
+          <div class="left-panel">
+            <div id="profilePrintable">
+              <div class="profile-card">
+                <div class="profile-image-container">
+                  <img
+                    [src]="profileImageUrl || '/assets/user.png'"
+                    alt="Profile"
+                    class="profile-image"
+                    onclick="changeProfileImage()"
+                  />
+                  <div class="status-indicator" title="Active Employee"></div>
+                  <input 
+                    type="file" 
+                    id="profileImageInput" 
+                    accept="image/*" 
+                    style="display: none;" 
+                    (change)="onImageSelected($event)"
+                  />
+                  <div *ngIf="isUploading" class="upload-spinner">Uploading...</div>
+                </div>
+                <div class="profile-name">{{employeeData.name || 'Unknown User'}}</div>
+                <div class="profile-role">{{employeeData.role || 'Employee'}}</div>
+                <div class="profile-id">{{profileData?.employeeId || 'N/A'}}</div>
+
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Years Experience</div>
+                  </div>
+                </div>
+
+                <div class="quick-actions">
+                  <button class="quick-btn" onclick="sendMessage()">
+                    <i class="fas fa-message"></i> Message
+                  </button>
+                  <button class="quick-btn" onclick="scheduleCall()">
+                    <i class="fas fa-phone"></i> Call
+                  </button>
+                  <button class="quick-btn" onclick="viewReports()">
+                    <i class="fas fa-chart-line"></i> Contract
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="leave-summary">
+              <h3 class="section-title">
+                <i class="fas fa-calendar-alt"></i>
+                Leave Balance
+              </h3>
+              <div class="leave-items">
+                <div class="leave-item" onclick="viewLeaveDetails('annual')">
+                  <div class="leave-header">
+                    <span class="leave-type">Annual Leave</span>
+                    <div class="leave-numbers">
+                      <span class="leave-badge badge-total">24</span>
+                      <span class="leave-badge badge-used">4</span>
+                      <span class="leave-badge badge-remaining">20</span>
+                    </div>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 17%"></div>
+                  </div>
+                </div>
+
+                <div class="leave-item" onclick="viewLeaveDetails('sick')">
+                  <div class="leave-header">
+                    <span class="leave-type">Sick Leave</span>
+                    <div class="leave-numbers">
+                      <span class="leave-badge badge-total">10</span>
+                      <span class="leave-badge badge-used">5</span>
+                      <span class="leave-badge badge-remaining">5</span>
+                    </div>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                  </div>
+                </div>
+
+                <div class="leave-item" onclick="viewLeaveDetails('personal')">
+                  <div class="leave-header">
+                    <span class="leave-type">Personal Leave</span>
+                    <div class="leave-numbers">
+                      <span class="leave-badge badge-total">15</span>
+                      <span class="leave-badge badge-used">0</span>
+                      <span class="leave-badge badge-remaining">15</span>
+                    </div>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-panel">
+            <div class="info-card">
+              <h3 class="section-title">
+                <i class="fas fa-id-card"></i>
+                Employee Information
+              </h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Department</div>
+                  <div class="info-value">EMPLOYEE</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Join Date</div>
+                  <div class="info-value">22 November 2024</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Employee ID</div>
+                  <div class="info-value">EMP001</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Work Experience</div>
+                  <div class="info-value">8 Years</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Gender</div>
+                  <div class="info-value">Female</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">ID Proof</div>
+                  <div class="info-value">X Card</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h3 class="section-title">
+                <i class="fas fa-address-book"></i>
+                Contact Information
+              </h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">Email</div>
+                  <a class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    meriembenftima@gmail.com
+                  </a>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Phone</div>
+                  <a href="tel:+21695754222" class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    +21695754222
+                  </a>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Emergency Contact</div>
+                  <a href="tel:+21695754222" class="contact-info">
+                    <i class="fas fa-phone-alt"></i>
+                    +21695754222
+                  </a>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Current Address</div>
+                  <div class="info-value">sahloul</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h3 class="section-title">
+                <i class="fas fa-history"></i>
+                Recent Activity
+              </h3>
+              <div class="timeline-section">
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-date">Aug 10, 2025</div>
+                    <div class="timeline-event">
+                      Applied for Annual Leave (Approved)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="holidays-card">
+              <h3 class="section-title">
+                <i class="fas fa-calendar-check"></i>
+                Upcoming Holidays
+              </h3>
+
+              <div class="filter-tabs">
+                <button
+                  class="filter-tab active"
+                  onclick="filterHolidays('all')"
+                >
+                  All
+                </button>
+                <button class="filter-tab" onclick="filterHolidays('upcoming')">
+                  Upcoming
+                </button>
+                <button class="filter-tab" onclick="filterHolidays('optional')">
+                  Optional
+                </button>
+                <button class="filter-tab" onclick="filterHolidays('national')">
+                  National
+                </button>
+              </div>
+
+              <div class="holidays-list">
+                <div class="holiday-item" data-category="national">
+                  <span class="holiday-emoji">🇮🇳</span>
+                  <div class="holiday-info">
+                    <div class="holiday-name">Independence Day</div>
+                    <div class="holiday-date">August 15, 2025</div>
+                  </div>
+                  <span class="holiday-days-left"></span>
+                </div>
+
+                <div class="holiday-item" data-category="national">
+                  <span class="holiday-emoji">🎉</span>
+                  <div class="holiday-info">
+                    <div class="holiday-name">New Year's Day</div>
+                    <div class="holiday-date">January 1, 2026</div>
+                  </div>
+                  <span class="holiday-days-left"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

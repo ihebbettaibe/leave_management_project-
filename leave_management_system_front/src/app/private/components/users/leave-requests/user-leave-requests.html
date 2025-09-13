@@ -1,0 +1,304 @@
+<app-user-nav-bar></app-user-nav-bar>
+<div class="app-shell">
+  <div class="shell-content">
+    <app-user-side-bar></app-user-side-bar>
+    <div class="app-container">
+      <div class="main-content">
+        <div class="leave-request-container">
+          <div class="request-form-wrapper">
+            <form
+              [formGroup]="leaveRequestForm"
+              (ngSubmit)="onSubmit()"
+              class="leave-form"
+            >
+              <div class="form-section">
+                <h3 class="section-title">Employee Information</h3>
+                <div class="employee-info-card">
+                  <div class="employee-avatar">
+                    <img
+                      src="https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866.jpg"
+                      alt="Employee Avatar"
+                      class="avatar-image"
+                    />
+                  </div>
+                  <div class="employee-details">
+                    <h4 class="employee-name">{{ currentEmployee.name }}</h4>
+                    <p class="employee-id">ID: {{ currentEmployee.id }}</p>
+                    <p class="employee-dept">
+                      {{ currentEmployee.department }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 class="section-title">Leave Details</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="leaveType" class="form-label"
+                      >Leave Type *</label
+                    >
+                    <select
+                      id="leaveType"
+                      formControlName="leaveType"
+                      class="form-select"
+                      [class.error]="isFieldInvalid('leaveType')"
+                    >
+                      <option value="" disabled>Select leave type</option>
+                      <option
+                        *ngFor="let type of leaveTypes"
+                        [value]="type.value"
+                      >
+                        {{ type.label }} (Max: {{ type.maxDays }} days)
+                      </option>
+                    </select>
+                    <div
+                      class="error-message"
+                      *ngIf="isFieldInvalid('leaveType')"
+                    >
+                      {{ getFieldError("leaveType") }}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="checkbox-wrapper">
+                      <input
+                        type="checkbox"
+                        formControlName="halfDay"
+                        (change)="onHalfDayToggle()"
+                      />
+                      <span class="checkbox-custom"></span>
+                      <span class="checkbox-label">Half Day Leave</span>
+                    </label>
+                    <div
+                      class="half-day-options"
+                      *ngIf="leaveRequestForm.get('halfDay')?.value"
+                    >
+                      <label class="radio-wrapper">
+                        <input
+                          type="radio"
+                          formControlName="halfDayPeriod"
+                          value="morning"
+                        />
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Morning (9 AM - 1 PM)</span>
+                      </label>
+                      <label class="radio-wrapper">
+                        <input
+                          type="radio"
+                          formControlName="halfDayPeriod"
+                          value="afternoon"
+                        />
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Afternoon (1 PM - 6 PM)</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="startDate" class="form-label"
+                      >Start Date *</label
+                    >
+                    <input
+                      type="date"
+                      id="startDate"
+                      formControlName="startDate"
+                      [min]="minDate"
+                      (change)="onStartDateChange()"
+                      class="form-input"
+                      [class.error]="isFieldInvalid('startDate')"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="isFieldInvalid('startDate')"
+                    >
+                      {{ getFieldError("startDate") }}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="endDate" class="form-label">End Date *</label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      formControlName="endDate"
+                      [min]="
+                        leaveRequestForm.get('startDate')?.value || minDate
+                      "
+                      [readonly]="leaveRequestForm.get('halfDay')?.value"
+                      class="form-input"
+                      [class.error]="isFieldInvalid('endDate')"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="isFieldInvalid('endDate')"
+                    >
+                      {{ getFieldError("endDate") }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="duration-display" *ngIf="calculateTotalDays() > 0">
+                  <div class="duration-card">
+                    <div class="duration-icon">📅</div>
+                    <div class="duration-info">
+                      <span class="duration-label">Total Duration</span>
+                      <span class="duration-value"
+                        >{{ calculateTotalDays() }}
+                        {{ calculateTotalDays() === 1 ? "Day" : "Days" }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 class="section-title">Leave Reason</h3>
+                <div class="form-group">
+                  <label for="reason" class="form-label"
+                    >Reason for Leave *</label
+                  >
+                  <textarea
+                    id="reason"
+                    formControlName="reason"
+                    placeholder="Please provide a detailed reason for your leave request..."
+                    class="form-textarea"
+                    rows="4"
+                    [class.error]="isFieldInvalid('reason')"
+                  ></textarea>
+                  <div class="character-count">
+                    {{ leaveRequestForm.get("reason")?.value?.length || 0 }}/500
+                    characters
+                  </div>
+                  <div class="error-message" *ngIf="isFieldInvalid('reason')">
+                    {{ getFieldError("reason") }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 class="section-title">Additional Information</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="emergencyContact" class="form-label"
+                      >Emergency Contact</label
+                    >
+                    <input
+                      type="tel"
+                      id="emergencyContact"
+                      formControlName="emergencyContact"
+                      placeholder="+216XXXXXXX"
+                      class="form-input"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="managerEmail" class="form-label"
+                      >Manager Email</label
+                    >
+                    <input
+                      type="email"
+                      id="managerEmail"
+                      formControlName="managerEmail"
+                      placeholder="manager@company.com"
+                      class="form-input"
+                      [class.error]="isFieldInvalid('managerEmail')"
+                    />
+                    <div
+                      class="error-message"
+                      *ngIf="isFieldInvalid('managerEmail')"
+                    >
+                      {{ getFieldError("managerEmail") }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 class="section-title">Attachments</h3>
+                <div class="file-upload-area">
+                  <input
+                    type="file"
+                    id="fileInput"
+                    (change)="onFileSelect($event)"
+                    [accept]="allowedFileTypes.join(',')"
+                    multiple
+                    class="file-input"
+                  />
+                  <label for="fileInput" class="file-upload-label">
+                    <div class="upload-icon">📎</div>
+                    <div class="upload-text">
+                      <span class="upload-primary">Click to upload files</span>
+                      <span class="upload-secondary"
+                        >PDF, DOC, DOCX, JPG, PNG (Max 5MB each)</span
+                      >
+                    </div>
+                  </label>
+                </div>
+
+                <div class="attached-files" *ngIf="attachedFiles.length > 0">
+                  <h4 class="attached-title">Attached Files</h4>
+                  <div class="file-list">
+                    <div
+                      class="file-item"
+                      *ngFor="let file of attachedFiles; let i = index"
+                    >
+                      <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div class="file-details">
+                          <span class="file-name">{{ file.name }}</span>
+                          <span class="file-size">{{
+                            formatFileSize(file.size)
+                          }}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="remove-file-btn"
+                        (click)="removeFile(i)"
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="onCancel()"
+                  [disabled]="isSubmitting"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="leaveRequestForm.invalid || isSubmitting"
+                >
+                  <span *ngIf="!isSubmitting">Submit Request</span>
+                  <span *ngIf="isSubmitting" class="loading-text">
+                    <span class="spinner"></span>
+                    Submitting...
+                  </span>
+                </button>
+              </div>
+
+              <div class="validation-summary" *ngIf="hasFormErrors">
+                <div class="validation-icon">⚠️</div>
+                <div class="validation-text">
+                  Please correct the errors above.
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+/* Background and layout */
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.landing-content {
+  color: white;
+  max-width: 600px;
+}
+
+.landing-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.landing-content p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+/* Button */
+.landing-button {
+  background-color: white;
+  color: #764ba2;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.landing-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
