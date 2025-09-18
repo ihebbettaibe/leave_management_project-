@@ -85,7 +85,7 @@ echo.
 
 REM Display summary
 echo Database Summary:
-echo Database Name: %DB_NAME%
+echo Database Name: %DB_NAME%        
 echo Host: %DB_HOST%:%DB_PORT%
 
 REM Count records

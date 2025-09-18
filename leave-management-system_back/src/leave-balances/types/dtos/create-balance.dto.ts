@@ -1,7 +1,7 @@
-import { IsInt, Min } from 'class-validator';
+import { IsInt, Min, IsString } from 'class-validator';
 
 export class CreateBalanceDto {
-  @IsInt() userId: number;
+  @IsString() userId: string; // UUID string
   @IsInt() leaveTypeId: number;
   @IsInt() year: number;
   @IsInt() @Min(0) carryover: number;

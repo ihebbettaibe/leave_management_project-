@@ -10,30 +10,45 @@ import { SharedModule } from './shared/shared.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TeamsModule } from './teams/teams.module';
-// import { LeaveTypesController } from './leave-types/leave-types.controller';
-// import { LeaveTypesService } from './leave-types/leave-types.service';
 import { HolidaysModule } from './holidays/holidays.module';
-// import { ProfileModule } from './profile/profile.module';
-// import { ProfileService } from './profile/profile.service';
-// import { ProfileController } from './profile/profile.controller';
-// import { LeaveBalancesModule } from './leave-balances/leave-balances.module';
-// import { LeaveTypesModule } from './leave-types/leave-types.module';
-
+import { ProfileModule } from './profile/profile.module';
+import { LeaveBalancesModule } from './leave-balances/leave-balances.module';
+import { LeaveTypesModule } from './leave-types/leave-types.module';
+import { CalendarModule } from './calendar/calendar.module';
+import { LeaveRequestsModule } from './leave-requests/leave-requests.module';
 
 @Module({
   imports: [
     // 1) Load .env globally
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // 2) Temporarily disable TypeORM to test auth without DB
-    // TypeOrmModule.forRootAsync({...}),
+    // 2) Configure TypeORM with PostgreSQL
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: +configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: configService.get('DB_SYNCHRONIZE') === 'true',
+      }),
+      inject: [ConfigService],
+    }),
 
-    // 3) Import minimal modules for auth testing
+    // 3) Import all modules
     SharedModule,
-    // UsersModule,
+    UsersModule,
     AuthModule,
-    // TeamsModule,
-    // HolidaysModule,
+    TeamsModule,
+    HolidaysModule,
+    ProfileModule,
+    LeaveBalancesModule,
+    LeaveTypesModule,
+    CalendarModule,
+    LeaveRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

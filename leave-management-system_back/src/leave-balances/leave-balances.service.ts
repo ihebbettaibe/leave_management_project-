@@ -20,7 +20,7 @@ export class LeaveBalancesService implements LeaveBalancesPort {
   ) {}
 
   async create(dto: CreateBalanceDto) {
-  const user = await this.usersRepo.findOne({ where: { id: String(dto.userId) } });
+  const user = await this.usersRepo.findOne({ where: { id: dto.userId } });
     if (!user) {
       throw new NotFoundException(`User #${dto.userId} not found`);
     }

@@ -35,11 +35,11 @@ export class UsersController {
     @Body() updateUserDto: UpdateUsersDto,
     @Param('id', new ParseUUIDPipe()) id: string,
   ) {
-    // Convert dateOfBirth from Date to string if present
+    // Convert dateOfBirth to Date if it's a string
     const dto: Partial<CreateUsersDto> = {
       ...updateUserDto,
       dateOfBirth: updateUserDto.dateOfBirth
-        ? updateUserDto.dateOfBirth.toISOString()
+        ? new Date(updateUserDto.dateOfBirth)
         : undefined,
     };
     return this.usersService.updateUser(id, dto);

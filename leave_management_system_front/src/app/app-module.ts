@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { login } from './auth/components/login/login';
+import { RegisterComponent } from './public/register/register';
 import { LandingPage } from './public/components/landing-page/landing-page';
 import { HttpClientModule } from '@angular/common/http';
 import { Dashboard } from './private/components/users/dashboard/user-dashboard';
@@ -27,6 +28,7 @@ import { AuthService } from './private/services/auth.service';
   declarations: [
     App,
     login,
+    RegisterComponent,
     Dashboard,
     LandingPage,
     UserProfile,

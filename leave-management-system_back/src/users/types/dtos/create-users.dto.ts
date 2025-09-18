@@ -1,13 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsNumber, IsOptional, IsBoolean, IsArray } from 'class-validator';
+
 export class CreateUsersDto {
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional()
+  username?: string;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  @ApiPropertyOptional()
   fullname: string;
 
   @IsEmail()
+  @ApiProperty()
   email: string;
 
   @IsString()
@@ -15,33 +21,42 @@ export class CreateUsersDto {
   @ApiProperty()
   password: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   @ApiProperty()
   phoneNumber: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  roles: string[];
+  @IsArray()
+  @IsOptional()
+  @ApiPropertyOptional()
+  roles?: string[];
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  profilePictureUrl: string;
+  @ApiPropertyOptional()
+  profilePictureUrl?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  bio: string;
+  @ApiPropertyOptional()
+  bio?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  address: string;
+  @ApiPropertyOptional()
+  address?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  dateOfBirth: string;
+  @IsOptional()
+  @ApiPropertyOptional()
+  dateOfBirth?: Date;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiPropertyOptional()
+  teamId?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiPropertyOptional()
+  isActive?: boolean;
 }

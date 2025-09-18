@@ -99,6 +99,34 @@ export class ApiService {
     });
   }
 
+  // Authentication APIs
+  async register(userData: any): Promise<any> {
+    try {
+      const response = await this.http.post(`${this.apiUrl}/auth/register`, userData).toPromise();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async registerWithFile(formData: FormData): Promise<any> {
+    try {
+      const response = await this.http.post(`${this.apiUrl}/auth/register`, formData).toPromise();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async login(credentials: { email: string; password: string }): Promise<any> {
+    try {
+      const response = await this.http.post(`${this.apiUrl}/auth/login`, credentials).toPromise();
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Profile APIs
   getProfile(userId?: string): Observable<ApiResponse<ProfileData>> {
     const url = userId ? `${this.apiUrl}/profile/${userId}` : `${this.apiUrl}/profile/me`;

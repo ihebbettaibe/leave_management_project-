@@ -6,6 +6,18 @@
     </div>
   </div>
 
+  <!-- Navigation Menu -->
+  <div class="nav-menu">
+    <div 
+      class="nav-item"
+      *ngFor="let item of navItems"
+      (click)="navigateTo(item.route); $event.stopPropagation()"
+      [class.active]="isActive(item.route)"
+    >
+      {{item.label}}
+    </div>
+  </div>
+
   <div class="nav-right">
     <!-- Action Buttons -->
     <div class="nav-actions">
@@ -75,54 +87,37 @@
     </div>
 
     <!-- User Profile Section -->
-    <div class="user-section" (click)="showUserMenu()">
+    <div class="user-section" (click)="toggleUserMenu($event)">
       <div class="user-profile">
-        <div class="user-avatar">A</div>
+        <div class="user-avatar">{{userAvatar}}</div>
         <div class="user-info">
-          <div class="user-name">Admin</div>
-          <div class="user-email">admin@domain.in</div>
+          <div class="user-name">{{userName}}</div>
+          <div class="user-email">{{userEmail}}</div>
         </div>
         <div class="dropdown-arrow">▼</div>
       </div>
-    </div>
-  </div>
-
-  <!-- Hidden navigation items for functionality -->
-  <div style="display: none">
-    <div
-      class="nav-item"
-      (click)="navigateTo('/dashboard')"
-      [class.active]="isActive('/dashboard')"
-    >
-      Dashboard
-    </div>
-    <div
-      class="nav-item active"
-      (click)="navigateTo('/profile')"
-      [class.active]="isActive('/profile')"
-    >
-      Employee
-    </div>
-    <div
-      class="nav-item"
-      (click)="navigateTo('/holidays')"
-      [class.active]="isActive('/holidays')"
-    >
-      Holiday Chart
-    </div>
-    <div
-      class="nav-item"
-      (click)="navigateTo('/leaves')"
-      [class.active]="isActive('/leaves')"
-    >
-      Leaves
-    </div>
-    <div
-      class="nav-item"
-      (click)="navigateTo('/leave-request')"
-      [class.active]="isActive('/leave-request')"
-    >
-      Leave Request
+      
+      <!-- User Profile Dropdown -->
+      <div class="dropdown-menu user-dropdown" *ngIf="showUserDropdown" (click)="$event.stopPropagation()">
+        <div class="dropdown-header">
+          <strong>{{userName}}</strong>
+          <small>{{userEmail}}</small>
+        </div>
+        <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+        <div class="dropdown-item" (click)="navigateTo('/profile')">
+          <i class="icon">👤</i>
+          View Profile
+        </div>
+        <div class="dropdown-item" (click)="navigateTo('/settings')">
+          <i class="icon">⚙️</i>
+          Settings
+        </div>
+        <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+        <div class="dropdown-item logout-item" (click)="logout()">
+          <i class="icon">🚪</i>
+          Logout
+        </div>
+      </div>
     </div>
   </div>
 </nav>

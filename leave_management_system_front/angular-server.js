@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = 4200;
+const PORT = 3000;
 
 // Enable CORS
 app.use((req, res, next) => {

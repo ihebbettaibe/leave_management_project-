@@ -336,6 +336,10 @@
                 <div class="menu-icon">📋</div>
                 <span class="menu-label">Requests</span>
             </div>
+            <div class="menu-item" onclick="showApprovals()">
+                <div class="menu-icon">✅</div>
+                <span class="menu-label">Approvals</span>
+            </div>
             <div class="menu-item" onclick="showProfile()">
                 <div class="menu-icon">👤</div>
                 <span class="menu-label">Profile</span>
@@ -546,31 +550,43 @@
         }
 
         function showCalendar() {
-            alert('Calendar feature coming soon!');
+            console.log('Navigating to calendar...');
+            window.location.href = '/calender';
         }
 
         function showRequests() {
-            alert('Leave requests feature coming soon!');
+            console.log('Navigating to leave requests...');
+            window.location.href = '/leaverequests';
+        }
+
+        function showApprovals() {
+            console.log('Navigating to approvals...');
+            window.location.href = '/approves';
         }
 
         function showProfile() {
-            alert('Profile feature coming soon!');
+            console.log('Navigating to profile...');
+            window.location.href = '/profile';
         }
 
         function requestLeave() {
-            alert('Request leave feature coming soon!');
+            console.log('Navigating to request leave...');
+            window.location.href = '/leaverequests';
         }
 
         function viewCalendar() {
-            alert('Calendar view coming soon!');
+            console.log('Navigating to calendar view...');
+            window.location.href = '/calender';
         }
 
         function viewRequests() {
-            alert('View requests feature coming soon!');
+            console.log('Navigating to view requests...');
+            window.location.href = '/leaverequests';
         }
 
         function updateProfile() {
-            alert('Update profile feature coming soon!');
+            console.log('Navigating to profile update...');
+            window.location.href = '/profile';
         }
 
         function logout() {

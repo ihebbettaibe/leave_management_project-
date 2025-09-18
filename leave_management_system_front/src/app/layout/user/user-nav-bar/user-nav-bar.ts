@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../private/services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface NavItem {
   label: string;
@@ -13,25 +15,28 @@ interface NavItem {
   templateUrl: './user-nav-bar.html',
   styleUrl: './user-nav-bar.css',
 })
-export class UserNavBar {
+export class UserNavBar implements OnInit, OnDestroy {
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard' },
-    { label: 'Employee', route: '/profile', active: true },
-    { label: 'Holiday Chart', route: '/holidays' },
-    { label: 'Leaves', route: '/leaves' },
-    { label: 'Leave Request', route: '/leave-request' },
+    { label: 'Profile', route: '/profile' },
+    { label: 'Calendar', route: '/calender' },
+    { label: 'Leave Requests', route: '/leaverequests' },
+    { label: 'Approvals', route: '/approves' },
   ];
 
   // User data
   currentUser = {
-    name: 'Admin',
-    email: 'admin@domain.in',
-    avatar: 'A',
-    role: 'Administrator',
+    name: 'Loading...',
+    email: 'loading...',
+    avatar: 'L',
+    role: 'employee',
   };
+
+  private userSubscription?: Subscription;
 
   // Dropdown states
   showNotificationDropdown = false;
+  showUserDropdown = false;
   
   // HR and Manager contact information
   hrContacts = [
@@ -55,7 +60,31 @@ export class UserNavBar {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Subscribe to current user changes
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.updateUserInfo(user);
+      }
+    });
+
+    // Load current user if available
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.updateUserInfo(currentUser);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
 
   // Method to navigate to a specific route
   navigateTo(route: string): void {
@@ -70,14 +99,11 @@ export class UserNavBar {
   }
 
   // User menu methods
-  showUserMenu(): void {
-    console.log('User menu clicked');
-    // You can implement a dropdown menu here with options like:
-    // - View Profile
-    // - Account Settings
-    // - Logout
-    // For now, we'll show a simple alert or navigate to profile
-    this.showUserOptions();
+  toggleUserMenu(event: Event): void {
+    event.stopPropagation();
+    this.showUserDropdown = !this.showUserDropdown;
+    // Close other dropdowns
+    this.showNotificationDropdown = false;
   }
 
   private showUserOptions(): void {
@@ -101,6 +127,7 @@ export class UserNavBar {
 
   closeDropdowns(): void {
     this.showNotificationDropdown = false;
+    this.showUserDropdown = false;
   }
 
   sendEmailToContact(email: string, name: string): void {
@@ -122,8 +149,11 @@ export class UserNavBar {
     // Implement logout logic here
     console.log('Logging out...');
     // Clear any stored authentication tokens
-    // localStorage.removeItem('authToken');
-    // sessionStorage.clear();
+    localStorage.removeItem('authToken');
+    sessionStorage.clear();
+
+    // Close any dropdowns
+    this.closeDropdowns();
 
     // Redirect to login page
     this.router.navigate(['/login']);
@@ -131,7 +161,29 @@ export class UserNavBar {
 
   // Method to update user info
   updateUserInfo(userInfo: any): void {
-    this.currentUser = { ...this.currentUser, ...userInfo };
+    if (userInfo) {
+      this.currentUser = {
+        name: userInfo.firstName && userInfo.lastName 
+          ? `${userInfo.firstName} ${userInfo.lastName}` 
+          : userInfo.fullname || userInfo.name || 'User',
+        email: userInfo.email || 'No email',
+        avatar: this.generateAvatar(userInfo),
+        role: userInfo.roles?.[0] || userInfo.role || 'employee',
+      };
+    }
+  }
+
+  private generateAvatar(user: any): string {
+    if (user.firstName) {
+      return user.firstName.charAt(0).toUpperCase();
+    } else if (user.fullname) {
+      return user.fullname.charAt(0).toUpperCase();
+    } else if (user.name) {
+      return user.name.charAt(0).toUpperCase();
+    } else if (user.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
   }
 
   // Getter methods for template
