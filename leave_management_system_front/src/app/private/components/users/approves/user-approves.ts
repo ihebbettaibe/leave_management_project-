@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../services/api.service';
+import { AuthService } from '../../../services/auth.service';
 
 interface LeaveStatistic {
   type: string;
@@ -32,80 +34,14 @@ interface FilterOptions {
 })
 export class UserApproves implements OnInit {
   // Leave statistics data
-  leaveStats: LeaveStatistic[] = [
-    {
-      type: 'Approved',
-      count: 12,
-      icon: '✓',
-      color: '#10b981',
-      bgColor: '#dcfce7',
-    },
-    {
-      type: 'Pending',
-      count: 3,
-      icon: '⏳',
-      color: '#f59e0b',
-      bgColor: '#fef3c7',
-    },
-    {
-      type: 'Requests',
-      count: 20,
-      icon: '📋',
-      color: '#ef4444',
-      bgColor: '#fecaca',
-    },
-    {
-      type: 'Declined',
-      count: 5,
-      icon: '✗',
-      color: '#ef4444',
-      bgColor: '#fecaca',
-    },
-  ];
+  leaveStats: LeaveStatistic[] = [];
 
   // Leave allowance and usage data
-  leaveAllowance = 20;
-  leaveUsed = 10;
+  leaveAllowance = 0;
+  leaveUsed = 0;
 
   // Leave requests data
-  leaveRequests: LeaveRequest[] = [
-    {
-      id: '1',
-      employee: 'Jacob Jones',
-      startDate: 'Apr. 31',
-      endDate: 'Apr. 29',
-      duration: '3 days',
-      status: 'Approved',
-      leaveType: 'Annual Leave',
-    },
-    {
-      id: '2',
-      employee: 'Kristen Webb',
-      startDate: 'Jan. 17',
-      endDate: 'Jan. 30',
-      duration: '2 days',
-      status: 'Pending',
-      leaveType: 'Sick Leave',
-    },
-    {
-      id: '3',
-      employee: 'Eleanor Pena',
-      startDate: 'Feb. 21',
-      endDate: 'Feb. 25',
-      duration: '1 day',
-      status: 'Approved',
-      leaveType: 'Personal Leave',
-    },
-    {
-      id: '4',
-      employee: 'Kathryn Murphy',
-      startDate: 'Jan. 31',
-      endDate: 'Jan. 31',
-      duration: 'No days',
-      status: 'Approved',
-      leaveType: 'Half Day',
-    },
-  ];
+  leaveRequests: LeaveRequest[] = [];
 
   // Filtered requests
   filteredRequests: LeaveRequest[] = [];
@@ -134,10 +70,137 @@ export class UserApproves implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   selectedRequests: string[] = [];
 
-  constructor() {}
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.filteredRequests = [...this.leaveRequests];
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.loadLeaveRequests();
+    this.loadLeaveStatistics();
+    this.loadLeaveBalance();
+  }
+
+  private loadLeaveRequests(): void {
+    this.apiService.getMyLeaveRequests().subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          this.leaveRequests = response.data.map((request: any) => ({
+            id: request.id,
+            employee: `${request.user?.firstName || ''} ${request.user?.lastName || ''}`.trim() || 'Unknown',
+            startDate: this.formatDate(request.startDate),
+            endDate: this.formatDate(request.endDate),
+            duration: this.calculateDuration(request.startDate, request.endDate),
+            status: this.mapStatus(request.status),
+            leaveType: request.leaveType?.name || 'Unknown',
+          }));
+          this.filteredRequests = [...this.leaveRequests];
+        }
+      },
+      error: (error) => {
+        console.error('Error loading leave requests:', error);
+      }
+    });
+  }
+
+  private loadLeaveStatistics(): void {
+    // Calculate statistics from leave requests
+    const approved = this.leaveRequests.filter(r => r.status === 'Approved').length;
+    const pending = this.leaveRequests.filter(r => r.status === 'Pending').length;
+    const declined = this.leaveRequests.filter(r => r.status === 'Declined').length;
+    const total = this.leaveRequests.length;
+
+    this.leaveStats = [
+      {
+        type: 'Approved',
+        count: approved,
+        icon: '✓',
+        color: '#10b981',
+        bgColor: '#dcfce7',
+      },
+      {
+        type: 'Pending',
+        count: pending,
+        icon: '⏳',
+        color: '#f59e0b',
+        bgColor: '#fef3c7',
+      },
+      {
+        type: 'Requests',
+        count: total,
+        icon: '📋',
+        color: '#ef4444',
+        bgColor: '#fecaca',
+      },
+      {
+        type: 'Declined',
+        count: declined,
+        icon: '✗',
+        color: '#ef4444',
+        bgColor: '#fecaca',
+      },
+    ];
+  }
+
+  private loadLeaveBalance(): void {
+    this.apiService.getDashboardData().subscribe({
+      next: (response: any) => {
+        if (response.success && response.data?.leaveBalance) {
+          const balance = response.data.leaveBalance;
+          this.leaveAllowance = balance.annual?.total || 0;
+          this.leaveUsed = balance.annual?.used || 0;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading leave balance:', error);
+      }
+    });
+  }
+
+  private formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  }
+
+  private calculateDuration(startDate: string, endDate: string): string {
+    if (!startDate || !endDate) return 'N/A';
+    try {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      
+      if (diffDays === 1) return '1 day';
+      return `${diffDays} days`;
+    } catch (error) {
+      return 'N/A';
+    }
+  }
+
+  private mapStatus(status: string): 'Approved' | 'Pending' | 'Declined' {
+    switch (status?.toLowerCase()) {
+      case 'approved':
+        return 'Approved';
+      case 'pending':
+        return 'Pending';
+      case 'declined':
+      case 'rejected':
+        return 'Declined';
+      default:
+        return 'Pending';
+    }
   }
 
   // Filter methods

@@ -19,11 +19,13 @@ async function bootstrap() {
       'http://localhost:4200', 
       'http://localhost:4201',
       'http://localhost:3000',
-      'http://localhost:3002', // Added frontend server port
+      'http://localhost:3002', // Legacy frontend server port
+      'http://localhost:4300', // Current frontend server port
       'http://127.0.0.1:4200',
       'http://127.0.0.1:4201',
       'http://127.0.0.1:3000',
-      'http://127.0.0.1:3002', // Added frontend server port
+      'http://127.0.0.1:3002', // Legacy frontend server port
+      'http://127.0.0.1:4300', // Current frontend server port
       'file://',
       'null' // For local file access
     ], // Angular frontend URLs and local file access

@@ -432,10 +432,13 @@
         <nav class="nav-bar">
             <div class="nav-brand">📋 Leave Management System</div>
             <div class="nav-user">
-                <span>Welcome back!</span>
+                <span id="navUserName">Welcome back!</span>
                 <div class="nav-avatar">
                     <i class="fas fa-user"></i>
                 </div>
+                <button onclick="authManager.logout()" style="margin-left: 10px; padding: 5px 10px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </nav>
 
@@ -461,7 +464,7 @@
                 <div class="menu-icon">👤</div>
                 <span class="menu-label">Profile</span>
             </div>
-            <div class="menu-item" onclick="logout()">
+            <div class="menu-item" onclick="authManager.logout()">
                 <div class="menu-icon">🚪</div>
                 <span class="menu-label">Logout</span>
             </div>
@@ -484,36 +487,35 @@
                 <div class="profile-sidebar">
                     <div class="profile-avatar">
                         <div class="avatar" onclick="document.getElementById('avatarInput').click()">
-                            JD
                             <div class="avatar-upload">
                                 <i class="fas fa-camera"></i>
                             </div>
                         </div>
                         <input type="file" id="avatarInput" style="display: none;" accept="image/*">
-                        <div class="profile-name" id="profileName">John Doe</div>
-                        <div class="profile-role" id="profileRole">Software Developer</div>
+                        <div class="profile-name" id="profileName">Loading...</div>
+                        <div class="profile-role" id="profileRole">Loading...</div>
                     </div>
 
                     <div class="profile-stats">
                         <div class="stat-item">
                             <span class="stat-label">Employee ID:</span>
-                            <span class="stat-value">EMP001</span>
+                            <span class="stat-value" id="employeeId">Loading...</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Department:</span>
-                            <span class="stat-value">Engineering</span>
+                            <span class="stat-value" id="department">Loading...</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Join Date:</span>
-                            <span class="stat-value">Jan 15, 2023</span>
+                            <span class="stat-value" id="joinDate">Loading...</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Manager:</span>
-                            <span class="stat-value">Sarah Wilson</span>
+                            <span class="stat-value" id="manager">Loading...</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">Location:</span>
-                            <span class="stat-value">New York, NY</span>
+                            <span class="stat-value" id="location">Loading...</span>
                         </div>
                     </div>
                 </div>
@@ -544,14 +546,14 @@
                                         <i class="fas fa-user"></i>
                                         First Name
                                     </label>
-                                    <input type="text" id="firstName" name="firstName" value="John" required>
+                                    <input type="text" id="firstName" name="firstName" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName">
                                         <i class="fas fa-user"></i>
                                         Last Name
                                     </label>
-                                    <input type="text" id="lastName" name="lastName" value="Doe" required>
+                                    <input type="text" id="lastName" name="lastName" required>
                                 </div>
                             </div>
 
@@ -561,14 +563,14 @@
                                         <i class="fas fa-envelope"></i>
                                         Email Address
                                     </label>
-                                    <input type="email" id="email" name="email" value="john.doe@company.com" required>
+                                    <input type="email" id="email" name="email" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">
                                         <i class="fas fa-phone"></i>
                                         Phone Number
                                     </label>
-                                    <input type="tel" id="phone" name="phone" value="+1-555-0123">
+                                    <input type="tel" id="phone" name="phone">
                                 </div>
                             </div>
 
@@ -578,7 +580,7 @@
                                         <i class="fas fa-birthday-cake"></i>
                                         Date of Birth
                                     </label>
-                                    <input type="date" id="birthDate" name="birthDate" value="1990-05-15">
+                                    <input type="date" id="birthDate" name="birthDate">
                                 </div>
                                 <div class="form-group">
                                     <label for="gender">
@@ -586,7 +588,8 @@
                                         Gender
                                     </label>
                                     <select id="gender" name="gender">
-                                        <option value="male" selected>Male</option>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
                                         <option value="female">Female</option>
                                         <option value="other">Other</option>
                                         <option value="prefer-not-to-say">Prefer not to say</option>
@@ -599,9 +602,7 @@
                                     <i class="fas fa-home"></i>
                                     Address
                                 </label>
-                                <textarea id="address" name="address" rows="3">123 Main Street, Apt 4B
-New York, NY 10001
-United States</textarea>
+                                <textarea id="address" name="address" rows="3" placeholder="Enter your address"></textarea>
                             </div>
 
                             <div class="form-row">
@@ -610,14 +611,14 @@ United States</textarea>
                                         <i class="fas fa-user-friends"></i>
                                         Emergency Contact Name
                                     </label>
-                                    <input type="text" id="emergencyName" name="emergencyName" value="Jane Doe">
+                                    <input type="text" id="emergencyName" name="emergencyName">
                                 </div>
                                 <div class="form-group">
                                     <label for="emergencyPhone">
                                         <i class="fas fa-phone"></i>
                                         Emergency Contact Phone
                                     </label>
-                                    <input type="tel" id="emergencyPhone" name="emergencyPhone" value="+1-555-0456">
+                                    <input type="tel" id="emergencyPhone" name="emergencyPhone">
                                 </div>
                             </div>
 
@@ -768,104 +769,249 @@ United States</textarea>
         </main>
     </div>
 
+    <script src="auth.js"></script>
     <script>
+        // Tabs
         function showTab(tabName) {
-            // Hide all tab contents
             const tabContents = document.querySelectorAll('.tab-content');
             tabContents.forEach(content => content.classList.remove('active'));
-
-            // Remove active class from all tabs
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Show selected tab content
             document.getElementById(tabName).classList.add('active');
-
-            // Add active class to clicked tab
             event.target.closest('.tab').classList.add('active');
         }
 
         function resetPersonalForm() {
             document.getElementById('personalInfoForm').reset();
-            // Reset to original values
-            document.getElementById('firstName').value = 'John';
-            document.getElementById('lastName').value = 'Doe';
-            document.getElementById('email').value = 'john.doe@company.com';
-            document.getElementById('phone').value = '+1-555-0123';
-            document.getElementById('birthDate').value = '1990-05-15';
-            document.getElementById('address').value = '123 Main Street, Apt 4B\nNew York, NY 10001\nUnited States';
-            document.getElementById('emergencyName').value = 'Jane Doe';
-            document.getElementById('emergencyPhone').value = '+1-555-0456';
+            initializeProfile();
         }
 
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = '/';
+        // Helpers
+        function getQueryParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        async function fetchJson(url, options = {}) {
+            const res = await fetch(url, options);
+            if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+            return res.json();
+        }
+
+        function showInfoBanner(message) {
+            const container = document.querySelector('.main-content');
+            if (!container) return;
+            let banner = document.getElementById('database-notice');
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'database-notice';
+                banner.style.cssText = `
+                    background: linear-gradient(45deg, #4b6cb7, #182848);
+                    color: white;
+                    padding: 12px 20px;
+                    margin: 20px 0;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                `;
+                container.insertBefore(banner, container.firstChild);
+            }
+            banner.textContent = message;
+        }
+
+        function disablePersonalForm(disabled) {
+            const form = document.getElementById('personalInfoForm');
+            if (!form) return;
+            [...form.elements].forEach(el => el.disabled = !!disabled);
+        }
+
+    function populateProfile(user) {
+            console.log('👤 Populating profile from DB user record:', user);
+            // Name
+            if (user.fullname) {
+                const parts = user.fullname.split(' ');
+                document.getElementById('firstName').value = parts[0] || '';
+                document.getElementById('lastName').value = parts.slice(1).join(' ') || '';
+                document.getElementById('profileName').textContent = user.fullname;
+                document.getElementById('navUserName').textContent = user.fullname;
+            }
+            // Contacts and personal
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phoneNumber || '';
+            document.getElementById('address').value = user.address || '';
+            if (user.dateOfBirth) {
+                const d = new Date(user.dateOfBirth);
+                document.getElementById('birthDate').value = d.toISOString().split('T')[0];
+            }
+            if (user.gender) {
+                document.getElementById('gender').value = user.gender;
+            }
+            if (user.emergencyContactName) document.getElementById('emergencyName').value = user.emergencyContactName;
+            if (user.emergencyContactPhone) document.getElementById('emergencyPhone').value = user.emergencyContactPhone;
+            // Role and stats
+            const roleElement = document.getElementById('profileRole');
+            roleElement.textContent = (Array.isArray(user.roles) ? user.roles[0] : user.roles) || 'Employee';
+            document.getElementById('employeeId').textContent = user.employeeId || user.id || 'N/A';
+            document.getElementById('department').textContent = user.department || 'Not Specified';
+            document.getElementById('joinDate').textContent = user.joinDate ? new Date(user.joinDate).toLocaleDateString() : 'Not Specified';
+            document.getElementById('manager').textContent = user.manager || 'Not Assigned';
+            document.getElementById('location').textContent = user.location || 'Not Specified';
+            // Avatar
+            const avatar = document.querySelector('.avatar');
+            if (user.profilePictureUrl) {
+                avatar.style.backgroundImage = `url(http://localhost:3001${user.profilePictureUrl})`;
+                avatar.style.backgroundSize = 'cover';
+                avatar.style.backgroundPosition = 'center';
+                avatar.innerHTML = '<div class="avatar-upload"><i class="fas fa-camera"></i></div>';
+            } else if (user.fullname) {
+                const parts = user.fullname.split(' ');
+                const initials = (parts[0]?.charAt(0) || '') + (parts[1]?.charAt(0) || '');
+                avatar.innerHTML = initials.toUpperCase();
+            }
+            // Do not force-enable form here; initializeProfile controls editability
+        }
+
+        async function initializeProfile() {
+            try {
+                console.log('👤 Initializing profile with real DB data (no hardcode, no fallbacks)');
+                if (typeof authManager !== 'undefined' && authManager.isAuthenticated && authManager.isAuthenticated()) {
+                    console.log('🔐 Auth detected, loading /auth/me');
+                    const me = await authManager.getCurrentUser();
+                    const userId = me?.id || me?.userId;
+                    if (!userId) throw new Error('Authenticated user has no id');
+                    const user = await fetchJson(`http://localhost:3001/users/${userId}`);
+                    window.currentUserId = user.id;
+                    populateProfile(user);
+                    disablePersonalForm(false);
+                    showInfoBanner('Loaded profile from database.');
+                    return;
+                }
+                const userIdParam = getQueryParam('userId');
+                if (userIdParam) {
+                    console.log('🔓 Public access with userId param:', userIdParam);
+                    const user = await fetchJson(`http://localhost:3001/users/${encodeURIComponent(userIdParam)}`);
+                    window.currentUserId = user.id;
+                    populateProfile(user);
+                    disablePersonalForm(true);
+                    showInfoBanner('Public view: login to edit this profile.');
+                    return;
+                }
+                showInfoBanner('Please login or provide ?userId=<id> in the URL to view a specific profile.');
+                disablePersonalForm(true);
+            } catch (err) {
+                console.error('❌ Initialization error:', err);
+                showInfoBanner('Failed to load profile. Please login or provide a valid userId.');
+                disablePersonalForm(true);
             }
         }
 
-        // Avatar upload handling
-        document.getElementById('avatarInput').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    // In a real app, you would upload this to your server
-                    alert('Profile picture updated! (Note: This is a demo - image not actually saved)');
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
-        });
+        // Wire up events on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeProfile();
 
-        // Form submissions
-        document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Update profile name in sidebar
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
-            
-            // Update avatar initials
-            const initials = firstName.charAt(0) + lastName.charAt(0);
-            document.querySelector('.avatar').childNodes[0].textContent = initials;
-            
-            alert('✅ Personal information updated successfully!');
-        });
+            // Save personal info
+            const form = document.getElementById('personalInfoForm');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!window.currentUserId) {
+                        alert('No user selected. Login or provide ?userId.');
+                        return;
+                    }
+                    if (!(typeof authManager !== 'undefined' && authManager.isAuthenticated && authManager.isAuthenticated())) {
+                        alert('Please login to edit your profile.');
+                        return;
+                    }
+                    const firstName = document.getElementById('firstName').value.trim();
+                    const lastName = document.getElementById('lastName').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phoneNumber = document.getElementById('phone').value.trim();
+                    const address = document.getElementById('address').value.trim();
+                    const dateOfBirth = document.getElementById('birthDate').value;
 
-        document.getElementById('securityForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('❌ New passwords do not match!');
-                return;
-            }
-            
-            if (newPassword.length < 8) {
-                alert('❌ Password must be at least 8 characters long!');
-                return;
-            }
-            
-            alert('✅ Password updated successfully!');
-            document.getElementById('securityForm').reset();
-        });
+                    const payload = {
+                        fullname: [firstName, lastName].filter(Boolean).join(' '),
+                        email: email || undefined,
+                        phoneNumber: phoneNumber || undefined,
+                        address: address || undefined,
+                        dateOfBirth: dateOfBirth || undefined,
+                    };
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('👤 Profile page loaded');
-            
-            // Try to load user data from backend
-            fetch('http://localhost:3001/profile')
-                .then(response => response.json())
-                .then(data => {
-                    console.log('👤 Loaded profile from backend:', data);
-                    // Update form fields with backend data if available
-                })
-                .catch(() => {
-                    console.log('👤 Using sample profile data (backend not connected)');
+                    try {
+                        const url = `http://localhost:3001/users/${window.currentUserId}`;
+                        const res = await authManager.authenticatedFetch(url, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        alert('✅ Personal information updated successfully in database!');
+                        await initializeProfile();
+                    } catch (error) {
+                        console.error('❌ Error updating user data:', error);
+                        alert(`❌ Failed to save changes: ${error.message}`);
+                    }
                 });
+            }
+
+            // Avatar upload
+            const avatarInput = document.getElementById('avatarInput');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    if (!window.currentUserId) {
+                        alert('No user selected. Login or provide ?userId.');
+                        return;
+                    }
+                    if (!(typeof authManager !== 'undefined' && authManager.isAuthenticated && authManager.isAuthenticated())) {
+                        alert('Please login to upload a profile picture.');
+                        e.target.value = '';
+                        return;
+                    }
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    try {
+                        const url = `http://localhost:3001/users/${window.currentUserId}/profile-pic`;
+                        const opts = { method: 'POST', body: formData, headers: { 'Authorization': `Bearer ${authManager.getToken()}` } };
+                        const res = await fetch(url, opts);
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        alert('✅ Profile picture uploaded!');
+                        await initializeProfile();
+                    } catch (err) {
+                        console.error('❌ Upload error:', err);
+                        alert(`❌ Failed to upload: ${err.message}`);
+                    } finally {
+                        avatarInput.value = '';
+                    }
+                });
+            }
+
+            // Security form (placeholder)
+            const secForm = document.getElementById('securityForm');
+            if (secForm) {
+                secForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const currentPassword = document.getElementById('currentPassword').value;
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    if (!currentPassword || !newPassword || !confirmPassword) {
+                        alert('❌ Please fill in all password fields!');
+                        return;
+                    }
+                    if (newPassword !== confirmPassword) {
+                        alert('❌ New passwords do not match!');
+                        return;
+                    }
+                    if (newPassword.length < 8) {
+                        alert('❌ Password must be at least 8 characters long!');
+                        return;
+                    }
+                    alert('✅ Password updated successfully! (Password change API not yet implemented)');
+                    secForm.reset();
+                });
+            }
         });
     </script>
 </body>

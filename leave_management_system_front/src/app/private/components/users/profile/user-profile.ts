@@ -36,6 +36,7 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   profileData: ProfileData | null = null;
   dashboardData: DashboardData | null = null;
   profileImageUrl: string | null = null;
+  holidays: any[] = [];
   isLoading = true;
   error: string | null = null;
   isUploading = false;
@@ -339,11 +340,12 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    // Load both profile and dashboard data
+    // Load profile, dashboard, and holidays data
     Promise.all([
       this.apiService.getProfile().toPromise(),
-      this.apiService.getDashboardData().toPromise()
-    ]).then(([profileResponse, dashboardResponse]) => {
+      this.apiService.getDashboardData().toPromise(),
+      this.apiService.getHolidays().toPromise()
+    ]).then(([profileResponse, dashboardResponse, holidaysResponse]) => {
       if (profileResponse?.success && profileResponse.data) {
         this.profileData = profileResponse.data;
         this.updateEmployeeDataFromProfile(profileResponse.data);
@@ -354,6 +356,10 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
         this.dashboardData = dashboardResponse.data;
         this.updateLeaveDataFromDashboard(dashboardResponse.data);
         this.updateEmployeeDataFromDashboard(dashboardResponse.data);
+      }
+
+      if (holidaysResponse?.success && holidaysResponse.data) {
+        this.holidays = holidaysResponse.data;
       }
 
       this.isLoading = false;
@@ -563,5 +569,43 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
 
   private capFirst(s: string): string {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  // Utility methods for template
+  getLeavePercentage(leaveType: 'annual' | 'sick' | 'personal'): number {
+    const leave = this.leaveData[leaveType];
+    if (leave.total === 0) return 0;
+    return Math.round((leave.used / leave.total) * 100);
+  }
+
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  }
+
+  getDaysUntilHoliday(holidayDate: string): string {
+    if (!holidayDate) return '';
+    try {
+      const today = new Date();
+      const holiday = new Date(holidayDate);
+      const diffTime = holiday.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) return 'Past';
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return '1 day';
+      return `${diffDays} days`;
+    } catch (error) {
+      return '';
+    }
   }
 }

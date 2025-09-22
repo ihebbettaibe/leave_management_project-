@@ -28,7 +28,7 @@ import { AuthService } from './private/services/auth.service';
   declarations: [
     App,
     login,
-    RegisterComponent,
+  // RegisterComponent removed from declarations. It should be imported as a standalone component in the router or used with imports: [RegisterComponent] if needed.
     Dashboard,
     LandingPage,
     UserProfile,

@@ -8,6 +8,6 @@ export class LeaveTypeEntity {
   @Column({ unique: true })
   name: string;
 
-  @Column('int')
+  @Column('int', { name: 'max_days' })
   maxDays: number;
 }

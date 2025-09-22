@@ -32,6 +32,26 @@ export class UserNavBar implements OnInit, OnDestroy {
     role: 'employee',
   };
 
+  // Computed properties for template
+  get userName(): string {
+    return this.currentUser.name;
+  }
+
+  get userEmail(): string {
+    return this.currentUser.email;
+  }
+
+  get userAvatar(): string {
+    return this.currentUser.avatar || this.getInitials(this.currentUser.name);
+  }
+
+  getInitials(name: string): string {
+    if (!name) return 'U';
+    const parts = name.split(' ');
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return parts[0][0].toUpperCase() + parts[parts.length - 1][0].toUpperCase();
+  }
+
   private userSubscription?: Subscription;
 
   // Dropdown states
@@ -186,18 +206,7 @@ export class UserNavBar implements OnInit, OnDestroy {
     return 'U';
   }
 
-  // Getter methods for template
-  get userName(): string {
-    return this.currentUser.name;
-  }
-
-  get userEmail(): string {
-    return this.currentUser.email;
-  }
-
-  get userAvatar(): string {
-    return this.currentUser.avatar;
-  }
+  // ...existing code...
 
   // Method to handle keyboard navigation
   onKeydown(event: KeyboardEvent): void {

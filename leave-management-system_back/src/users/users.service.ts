@@ -1,10 +1,13 @@
-
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './repositories/users.repository';
 import { CreateUsersDto } from './types/dtos/create-users.dto';
 
 @Injectable()
 export class UsersService {
+  // ...existing code...
+  async findByUsername(username: string) {
+    return this.usersRepository.findOneBy({ username });
+  }
   // ...existing code...
   async findByEmail(email: string) {
     return this.usersRepository.findOneBy({ email });

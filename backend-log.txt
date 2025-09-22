@@ -1,0 +1,149 @@
+
+> nest-project@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m7:20:03 PM[0m] Starting compilation in watch mode...
+
+[[90m7:20:07 PM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +24ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSharedModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHolidaysModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCalendarModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveRequestsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +450ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveTypesModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTeamsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveBalancesModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProfileModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +13ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/profile-pic, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/dev-token, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/me, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveBalancesController {/leave-balances}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveTypesController {/leave-types}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTeamsController {/teams}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHolidaysController {/holidays}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/holidays, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProfileController {/profile}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/profile/dashboard, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mCalendarController {/calendar}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/calendar/events, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveRequestsController {/leave-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-requests/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 13908  - [39m09/22/2025, 7:20:08 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +3ms[39m
+[2J[3J[H[[90m7:27:45 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m7:27:46 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m7:27:47 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m7:27:47 PM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +33ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSharedModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHolidaysModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCalendarModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveRequestsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:49 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +488ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +4ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveTypesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTeamsModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLeaveBalancesModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProfileModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +11ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/users/:id/profile-pic, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/dev-token, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/register, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveBalancesController {/leave-balances}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-balances/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveTypesController {/leave-types}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-types/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTeamsController {/teams}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/teams/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHolidaysController {/holidays}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/holidays, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProfileController {/profile}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/profile/dashboard, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/profile/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mCalendarController {/calendar}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/calendar/events, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLeaveRequestsController {/leave-requests}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/leave-requests/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 24888  - [39m09/22/2025, 7:27:50 PM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +3ms[39m

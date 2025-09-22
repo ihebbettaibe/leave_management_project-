@@ -1,22 +1,53 @@
 version: '3.8'
 services:
-  frontend:
-    build:
-      context: ./leave_management_system_front
-      dockerfile: Dockerfile
+  db:
+    image: postgres:16
+    container_name: lms_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nour
+      POSTGRES_DB: postgres
     ports:
-      - "8080:4200"
+      - "55432:5432"
     volumes:
-      - ./leave_management_system_front:/app
-    depends_on:
-      - backend
+      # Persist database data
+      - pgdata:/var/lib/postgresql/data
+      # Initialize and seed the database on first run
+      - ./leave-management-system_back/database:/docker-entrypoint-initdb.d
+
   backend:
     build:
       context: ./leave-management-system_back
       dockerfile: Dockerfile
+    container_name: lms_backend
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: development
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: nour
+      DB_NAME: leave_management_system
+      DB_SYNCHRONIZE: 'false'
     ports:
       - "3001:3001"
     volumes:
       - ./leave-management-system_back:/app
-    environment:
-      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./leave_management_system_front
+      dockerfile: Dockerfile
+    container_name: lms_frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:4200"
+    volumes:
+      - ./leave_management_system_front:/app
+
+volumes:
+  pgdata: {}

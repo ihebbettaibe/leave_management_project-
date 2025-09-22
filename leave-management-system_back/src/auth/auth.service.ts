@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { LeaveBalancesService } from '../leave-balances/leave-balances.service';
@@ -16,13 +16,31 @@ export class AuthService {
     private readonly leaveTypesService: LeaveTypesService,
   ) {}
 
-  // used by LocalStrategy
-  async validateUser(email: string, pass: string) {
-    const user = await this.usersService.findByEmail(email);
-  if (user && await bcrypt.compare(pass, user.password)) {
-      return user;
+  // used by LocalStrategy and login endpoint
+  async validateUserIdentifier(identifier: string, pass: string): Promise<AuthResponse> {
+    // Try to find user by email first
+    console.log('🔍 validateUserIdentifier called with identifier:', identifier);
+    let user = await this.usersService.findByEmail(identifier);
+    console.log('🔎 findByEmail result:', !!user);
+    if (!user) {
+      // If not found by email, try username
+      user = await this.usersService.findByUsername(identifier);
+      console.log('🔎 findByUsername result:', !!user);
     }
-    return null;
+    if (user) {
+      const match = await bcrypt.compare(pass, user.password);
+      console.log('🔐 password compare result for', identifier, ':', match);
+      if (match) {
+        return this.login(user);
+      }
+    }
+    console.log('❌ validateUserIdentifier - authentication failed for', identifier);
+    throw new Error('Invalid username/email or password');
+  }
+
+  // Backwards-compatible wrapper for LocalStrategy and other callers
+  async validateUser(identifier: string, password: string): Promise<AuthResponse> {
+    return this.validateUserIdentifier(identifier, password);
   }
 
   async login(user: any): Promise<AuthResponse> {
@@ -125,6 +143,19 @@ export class AuthService {
     } catch (error) {
       console.error(`❌ Failed to create leave balances for user ${userId}:`, error.message);
       // Don't throw error here to avoid failing registration
+    }
+  }
+
+  async findUserById(userId: string) {
+    try {
+      console.log('🔍 Finding user by ID:', userId);
+      const user = await this.usersService.getUserById(userId);
+      
+      console.log('✅ User found:', user.email);
+      return user;
+    } catch (error) {
+      console.log('❌ Error finding user by ID:', error.message);
+      throw new NotFoundException(`User with ID ${userId} not found`);
     }
   }
 }
