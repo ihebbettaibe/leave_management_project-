@@ -14,7 +14,7 @@ import { UserSideBar } from './layout/user/user-side-bar/user-side-bar';
 import { UserNavBar } from './layout/user/user-nav-bar/user-nav-bar';
 import { RouterModule } from '@angular/router';
 import { UserCalender } from './private/components/users/calender/user-calender';
-import { UserLeaveRequests } from './private/components/users/leave-requests/user-leave-requests';
+import { LeaveRequestComponent } from './private/components/users/leave-requests/user-leave-requests';
 import { UserApproves } from './private/components/users/approves/user-approves';
 // Admin Components
 import { AdminDashboard } from './private/components/admin/dashboard/admin-dashboard';
@@ -28,14 +28,13 @@ import { AuthService } from './private/services/auth.service';
   declarations: [
     App,
     login,
-    RegisterComponent,
     Dashboard,
     LandingPage,
     UserProfile,
     UserSideBar,
     UserNavBar,
     UserCalender,
-    UserLeaveRequests,
+    LeaveRequestComponent,
     UserApproves,
     // Admin Components
     AdminDashboard,
@@ -49,6 +48,7 @@ import { AuthService } from './private/services/auth.service';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    RegisterComponent,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

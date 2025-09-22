@@ -1,206 +1,130 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { LeaveRequest } from '../../../types/user/leaveRequestsType/leave-request.model';
-import { LeaveType } from '../../../types/user/leaveRequestsType/leave-type.model';
-import { LEAVE_TYPES } from '../../../types/user/leaveRequestsType/leave-types';
-import { ApiService } from '../../../services/api.service';
-import { AuthService } from '../../../services/auth.service';
+
+interface LeaveType {
+  value: string;
+  label: string;
+  maxDays: number;
+  color: string;
+}
+
+interface User {
+  fullname: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  position?: string;
+}
+
+interface UpcomingLeave {
+  title: string;
+  startDate: string;
+  endDate: string;
+}
 
 @Component({
   selector: 'app-leave-request',
-  standalone: false,
   templateUrl: './user-leave-requests.html',
   styleUrls: ['./user-leave-requests.css'],
+  standalone: false
 })
-export class UserLeaveRequests implements OnInit {
-  @Output() leaveSubmitted = new EventEmitter<LeaveRequest>();
-  @Output() formCancel = new EventEmitter<void>();
-
+export class LeaveRequestComponent implements OnInit {
   leaveRequestForm: FormGroup;
-  isSubmitting: boolean = false;
-  showSuccessMessage: boolean = false;
+  isSubmitting = false;
   attachedFiles: File[] = [];
-  maxFileSize = 5 * 1024 * 1024; // 5MB
   allowedFileTypes = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png'];
 
-  leaveTypes: LeaveType[] = [];
-  apiLeaveTypes: any[] = [];
-  currentEmployee = {
-    id: '',
-    name: '',
-    department: '',
+  user: User = {
+    fullname: 'John Doe',
+    username: 'john.doe',
+    email: 'john.doe@company.com',
+    position: 'Software Engineer',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
   };
 
-  isLoading = false;
-  error: string | null = null;
+  currentEmployee = {
+    name: 'John Doe',
+    id: 'EMP001',
+    department: 'Engineering'
+  };
 
-  constructor(
-    private fb: FormBuilder, 
-    private router: Router,
-    private apiService: ApiService,
-    private authService: AuthService
-  ) {
-    this.leaveRequestForm = this.fb.group(
-      {
-        leaveType: ['', [Validators.required]],
-        startDate: ['', [Validators.required]],
-        endDate: ['', [Validators.required]],
-        reason: ['', [Validators.required, Validators.minLength(10)]],
-        halfDay: [false],
-        halfDayPeriod: ['morning'],
-        emergencyContact: [''],
-        managerEmail: ['', [Validators.email]],
-      },
-      { validators: this.dateRangeValidatorFactory(this.leaveTypes) }
-    );
+  minDate = new Date().toISOString().split('T')[0];
+
+  leaveTypes: LeaveType[] = [
+    { value: 'annual', label: 'Annual Leave', maxDays: 25, color: '#3b82f6' },
+    { value: 'sick', label: 'Sick Leave', maxDays: 10, color: '#ef4444' },
+    { value: 'maternity', label: 'Maternity Leave', maxDays: 120, color: '#ec4899' },
+    { value: 'paternity', label: 'Paternity Leave', maxDays: 14, color: '#8b5cf6' },
+    { value: 'emergency', label: 'Emergency Leave', maxDays: 5, color: '#f59e0b' },
+    { value: 'bereavement', label: 'Bereavement Leave', maxDays: 3, color: '#6b7280' }
+  ];
+
+  upcomingLeaves: UpcomingLeave[] = [
+    { title: 'Summer Vacation', startDate: '2025-08-15', endDate: '2025-08-25' },
+    { title: 'Conference Leave', startDate: '2025-09-10', endDate: '2025-09-12' }
+  ];
+
+  constructor(private formBuilder: FormBuilder) {
+    this.leaveRequestForm = this.createForm();
   }
 
   ngOnInit(): void {
-    this.loadLeaveTypes();
-    this.loadCurrentUser();
+    this.setupFormValidation();
   }
 
-  private loadLeaveTypes(): void {
-    this.apiService.getLeaveTypes().subscribe({
-      next: (response: any) => {
-        if (response.success && response.data) {
-          this.apiLeaveTypes = response.data;
-          // Convert API leave types to component format
-          this.leaveTypes = response.data.map((lt: any) => ({
-            value: lt.id,
-            label: lt.name,
-            maxDays: lt.maxDaysPerYear || 30,
-            color: this.getLeaveTypeColor(lt.name),
-            description: lt.description
-          }));
-          
-          // Update form validator with new leave types
-          this.leaveRequestForm.setValidators(this.dateRangeValidatorFactory(this.leaveTypes));
-        } else {
-          // Fallback to default leave types
-          this.leaveTypes = LEAVE_TYPES;
-        }
-      },
-      error: (error: any) => {
-        console.error('Error loading leave types:', error);
-        this.leaveTypes = LEAVE_TYPES; // Fallback
-      }
+  private createForm(): FormGroup {
+    return this.formBuilder.group({
+      type: ['', [Validators.required]],
+      startDate: ['', [Validators.required]],
+      endDate: ['', [Validators.required]],
+      reason: ['', [Validators.required, Validators.maxLength(500)]],
+      emergencyContact: [''],
+      managerEmail: ['', [Validators.email]],
+      halfDay: [false]
     });
   }
 
-  private loadCurrentUser(): void {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      this.currentEmployee = {
-        id: user.id,
-        name: `${user.firstName} ${user.lastName}`,
-        department: user.department || 'N/A',
-      };
-    }
+  private setupFormValidation(): void {
+    // Add cross-field validation for dates
+    this.leaveRequestForm.get('endDate')?.valueChanges.subscribe(() => {
+      this.validateDateRange();
+    });
+
+    this.leaveRequestForm.get('startDate')?.valueChanges.subscribe(() => {
+      this.validateDateRange();
+    });
   }
 
-  private getLeaveTypeColor(name: string): string {
-    const colorMap: { [key: string]: string } = {
-      'Annual Leave': '#3b82f6',
-      'Sick Leave': '#ef4444',
-      'Personal Leave': '#10b981',
-      'Emergency Leave': '#f59e0b',
-      'Maternity Leave': '#8b5cf6',
-      'Paternity Leave': '#06b6d4',
-      'Study Leave': '#84cc16',
-      'Compassionate Leave': '#f97316',
-      'Half Day': '#f59e0b',
-    };
-    return colorMap[name] || '#6b7280';
-  }
-
-  // Factory function for the validator
-  dateRangeValidatorFactory(leaveTypes: LeaveType[]) {
-    return (control: any) => {
-      const form = control as FormGroup;
-      const startDate = form.get('startDate')?.value;
-      const endDate = form.get('endDate')?.value;
-
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (start < today) return { pastDate: true };
-        if (end < start) return { invalidDateRange: true };
-
-        const leaveType = form.get('leaveType')?.value;
-        if (leaveType) {
-          const selectedLeaveType = leaveTypes.find(
-            (lt: LeaveType) => lt.value === leaveType
-          );
-
-          if (selectedLeaveType) {
-            const daysDiff =
-              Math.ceil(
-                (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
-              ) + 1;
-
-            if (daysDiff > selectedLeaveType.maxDays) {
-              return {
-                exceedsMaxDays: {
-                  max: selectedLeaveType.maxDays,
-                  requested: daysDiff,
-                },
-              };
-            }
-          }
-        }
-      }
-
-      return null;
-    };
-  }
-
-  calculateTotalDays(): number {
+  private validateDateRange(): void {
     const startDate = this.leaveRequestForm.get('startDate')?.value;
     const endDate = this.leaveRequestForm.get('endDate')?.value;
 
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      const timeDiff = end.getTime() - start.getTime();
-      const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1;
-
-      if (this.leaveRequestForm.get('halfDay')?.value) {
-        return 0.5;
-      }
-
-      return daysDiff > 0 ? daysDiff : 0;
+    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+      this.leaveRequestForm.get('endDate')?.setErrors({ dateRange: true });
     }
-
-    return 0;
   }
 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files = Array.from(input.files);
-
-      const validFiles = files.filter((file) => {
-        const isValidSize = file.size <= this.maxFileSize;
-        const isValidType = this.allowedFileTypes.some((type) =>
-          file.name.toLowerCase().endsWith(type.toLowerCase())
-        );
-
-        if (!isValidSize) {
-          alert(`File ${file.name} is too large. Maximum size is 5MB.`);
-          return false;
-        }
-
+      
+      // Validate file types and sizes
+      const validFiles = files.filter(file => {
+        const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+        const isValidType = this.allowedFileTypes.includes(extension);
+        const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+        
         if (!isValidType) {
-          alert(`File ${file.name} is not a supported file type.`);
+          console.warn(`File ${file.name} has invalid type`);
           return false;
         }
-
+        
+        if (!isValidSize) {
+          console.warn(`File ${file.name} exceeds size limit`);
+          return false;
+        }
+        
         return true;
       });
 
@@ -220,169 +144,193 @@ export class UserLeaveRequests implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  onSubmit(): void {
-    if (this.leaveRequestForm.invalid) {
-      this.markFormGroupTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.error = null;
-
-    const formData = this.leaveRequestForm.value;
-    
-    const leaveRequest = {
-      leaveTypeId: formData.leaveType,
-      startDate: formData.startDate,
-      endDate: formData.endDate,
-      reason: formData.reason,
-      isHalfDay: formData.halfDay,
-      halfDayPeriod: formData.halfDay ? formData.halfDayPeriod : undefined,
-      attachments: this.attachedFiles
-    };
-
-    this.apiService.submitLeaveRequest(leaveRequest).subscribe({
-      next: (response: any) => {
-        this.isSubmitting = false;
-        if (response.success) {
-          this.showSuccessMessage = true;
-          this.showNotification('Leave request submitted successfully!');
-          
-          // Emit the traditional leave request object for any parent components
-          const traditionalLeaveRequest: LeaveRequest = {
-            id: response.data?.id || this.generateId(),
-            employeeId: this.currentEmployee.id,
-            employeeName: this.currentEmployee.name,
-            leaveType: formData.leaveType,
-            startDate: formData.startDate,
-            endDate: formData.endDate,
-            totalDays: this.calculateTotalDays(),
-            reason: formData.reason,
-            status: 'pending',
-            appliedDate: new Date().toISOString().split('T')[0],
-            attachments: this.attachedFiles,
-          };
-          
-          this.leaveSubmitted.emit(traditionalLeaveRequest);
-          
-          setTimeout(() => {
-            this.showSuccessMessage = false;
-            this.resetForm();
-          }, 3000);
-        } else {
-          this.error = response.message || 'Failed to submit leave request';
-        }
-      },
-      error: (error: any) => {
-        this.isSubmitting = false;
-        console.error('Error submitting leave request:', error);
-        this.error = error.error?.message || 'Failed to submit leave request. Please try again.';
-        this.showNotification(this.error!);
-      }
-    });
+  getSelectedLeaveType(): LeaveType | undefined {
+    const selectedValue = this.leaveRequestForm.get('type')?.value;
+    return this.leaveTypes.find(type => type.value === selectedValue);
   }
 
-  private showNotification(message: string): void {
-    // Create a simple notification
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #10b981;
-      color: white;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      z-index: 1000;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    `;
+  calculateTotalDays(): number {
+    const startDate = this.leaveRequestForm.get('startDate')?.value;
+    const endDate = this.leaveRequestForm.get('endDate')?.value;
+
+    if (!startDate || !endDate) return 0;
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const timeDiff = end.getTime() - start.getTime();
+    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+
+    return dayDiff > 0 ? dayDiff : 0;
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.leaveRequestForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.leaveRequestForm.get(fieldName);
     
-    document.body.appendChild(notification);
+    if (field?.errors) {
+      if (field.errors['required']) return `${fieldName} is required`;
+      if (field.errors['email']) return 'Please enter a valid email';
+      if (field.errors['maxlength']) return `Maximum ${field.errors['maxlength'].requiredLength} characters allowed`;
+      if (field.errors['dateRange']) return 'End date must be after start date';
+    }
     
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 5000);
+    return '';
+  }
+
+  async onSubmit(): Promise<void> {
+    if (this.leaveRequestForm.valid) {
+      this.isSubmitting = true;
+
+      try {
+        const formData = new FormData();
+        
+        // Append form fields
+        Object.keys(this.leaveRequestForm.value).forEach(key => {
+          formData.append(key, this.leaveRequestForm.value[key]);
+        });
+
+        // Append files
+        this.attachedFiles.forEach(file => {
+          formData.append('attachments', file);
+        });
+
+        // Simulate API call
+        await this.submitLeaveRequest(formData);
+        
+        this.showNotification('Leave request submitted successfully!', 'success');
+        this.resetForm();
+      } catch (error) {
+        this.showNotification('Failed to submit leave request. Please try again.', 'error');
+        console.error('Submission error:', error);
+      } finally {
+        this.isSubmitting = false;
+      }
+    } else {
+      this.markFormGroupTouched();
+    }
+  }
+
+  private async submitLeaveRequest(formData: FormData): Promise<void> {
+    // Replace with your actual API call
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log('Leave request submitted:', Object.fromEntries(formData));
+        resolve();
+      }, 2000);
+    });
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.leaveRequestForm.controls).forEach((key) => {
+    Object.keys(this.leaveRequestForm.controls).forEach(key => {
       this.leaveRequestForm.get(key)?.markAsTouched();
     });
-  }
-
-  private generateId(): string {
-    return 'LR_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
   resetForm(): void {
     this.leaveRequestForm.reset();
     this.attachedFiles = [];
-    this.isSubmitting = false;
-    this.showSuccessMessage = false;
   }
 
   onCancel(): void {
-    this.resetForm();
-    this.formCancel.emit();
+    if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
+      this.resetForm();
+    }
+  }
+
+  private showNotification(message: string, type: 'success' | 'error'): void {
+    // Implement your notification service here
+    console.log(`${type.toUpperCase()}: ${message}`);
+  }
+
+  formatDateRange(startDate: string, endDate: string): string {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    const startFormatted = start.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    
+    const endFormatted = end.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+    
+    return `${startFormatted} — ${endFormatted}`;
   }
 
   onHalfDayToggle(): void {
-    const halfDayControl = this.leaveRequestForm.get('halfDay');
-    const startDateControl = this.leaveRequestForm.get('startDate');
-    const endDateControl = this.leaveRequestForm.get('endDate');
-
-    if (halfDayControl?.value) {
-      if (startDateControl?.value) {
-        endDateControl?.setValue(startDateControl.value);
-      }
-    }
+    // Handle half day toggle logic
+    console.log('Half day toggle clicked');
   }
 
   onStartDateChange(): void {
-    const halfDayControl = this.leaveRequestForm.get('halfDay');
-    const startDateControl = this.leaveRequestForm.get('startDate');
-    const endDateControl = this.leaveRequestForm.get('endDate');
-
-    if (halfDayControl?.value && startDateControl?.value) {
-      endDateControl?.setValue(startDateControl.value);
+    // Handle start date change logic
+    const startDate = this.leaveRequestForm.get('startDate')?.value;
+    if (startDate) {
+      // Update minimum end date to be start date
+      this.minDate = startDate;
     }
-  }
-
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.leaveRequestForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getFieldError(fieldName: string): string {
-    const field = this.leaveRequestForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required']) return `${fieldName} is required`;
-      if (field.errors['email']) return 'Please enter a valid email';
-      if (field.errors['minlength'])
-        return `Minimum length is ${field.errors['minlength'].requiredLength} characters`;
-    }
-
-    if (this.leaveRequestForm.errors) {
-      if (this.leaveRequestForm.errors['pastDate'])
-        return 'Start date cannot be in the past';
-      if (this.leaveRequestForm.errors['invalidDateRange'])
-        return 'End date must be after start date';
-      if (this.leaveRequestForm.errors['exceedsMaxDays']) {
-        const error = this.leaveRequestForm.errors['exceedsMaxDays'];
-        return `Maximum ${error.max} days allowed for this leave type (${error.requested} requested)`;
-      }
-    }
-
-    return '';
-  }
-
-  get minDate(): string {
-    return new Date().toISOString().split('T')[0];
   }
 
   get hasFormErrors(): boolean {
-    return this.leaveRequestForm.invalid && this.leaveRequestForm.touched;
+    return this.leaveRequestForm.invalid && (this.leaveRequestForm.dirty || this.leaveRequestForm.touched);
+  }
+
+  // Drag and drop functionality
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget as HTMLElement;
+    target.classList.add('dragover');
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('dragover');
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const target = event.currentTarget as HTMLElement;
+    target.classList.remove('dragover');
+    
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFiles(files);
+    }
+  }
+
+  private handleFiles(files: FileList): void {
+    const fileArray = Array.from(files);
+    
+    // Validate file types and sizes
+    const validFiles = fileArray.filter(file => {
+      const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+      const isValidType = this.allowedFileTypes.includes(extension);
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+      
+      if (!isValidType) {
+        console.warn(`File ${file.name} has invalid type`);
+        return false;
+      }
+      
+      if (!isValidSize) {
+        console.warn(`File ${file.name} exceeds size limit`);
+        return false;
+      }
+      
+      return true;
+    });
+
+    this.attachedFiles = [...this.attachedFiles, ...validFiles];
   }
 }

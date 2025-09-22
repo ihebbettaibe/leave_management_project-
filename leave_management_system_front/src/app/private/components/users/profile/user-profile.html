@@ -29,30 +29,13 @@
           <div class="left-panel">
             <div id="profilePrintable">
               <div class="profile-card">
-                <div class="profile-image-container">
-                  <img
-                    [src]="profileImageUrl || '/assets/user.png'"
-                    alt="Profile"
-                    class="profile-image"
-                    onclick="changeProfileImage()"
-                  />
-                  <div class="status-indicator" title="Active Employee"></div>
-                  <input 
-                    type="file" 
-                    id="profileImageInput" 
-                    accept="image/*" 
-                    style="display: none;" 
-                    (change)="onImageSelected($event)"
-                  />
-                  <div *ngIf="isUploading" class="upload-spinner">Uploading...</div>
-                </div>
                 <div class="profile-name">{{employeeData.name || 'Unknown User'}}</div>
                 <div class="profile-role">{{employeeData.role || 'Employee'}}</div>
                 <div class="profile-id">{{profileData?.employeeId || 'N/A'}}</div>
 
                 <div class="stats-grid">
                   <div class="stat-item">
-                    <div class="stat-value">8</div>
+                    <div class="stat-value">{{employeeData.experience || '0'}}</div>
                     <div class="stat-label">Years Experience</div>
                   </div>
                 </div>
@@ -81,13 +64,13 @@
                   <div class="leave-header">
                     <span class="leave-type">Annual Leave</span>
                     <div class="leave-numbers">
-                      <span class="leave-badge badge-total">24</span>
-                      <span class="leave-badge badge-used">4</span>
-                      <span class="leave-badge badge-remaining">20</span>
+                      <span class="leave-badge badge-total">{{leaveData.annual.total || 0}}</span>
+                      <span class="leave-badge badge-used">{{leaveData.annual.used || 0}}</span>
+                      <span class="leave-badge badge-remaining">{{leaveData.annual.remaining || 0}}</span>
                     </div>
                   </div>
                   <div class="progress-bar">
-                    <div class="progress-fill" style="width: 17%"></div>
+                    <div class="progress-fill" [style.width.%]="leaveData.annual.total ? (leaveData.annual.used / leaveData.annual.total) * 100 : 0"></div>
                   </div>
                 </div>
 
@@ -95,13 +78,13 @@
                   <div class="leave-header">
                     <span class="leave-type">Sick Leave</span>
                     <div class="leave-numbers">
-                      <span class="leave-badge badge-total">10</span>
-                      <span class="leave-badge badge-used">5</span>
-                      <span class="leave-badge badge-remaining">5</span>
+                      <span class="leave-badge badge-total">{{leaveData.sick.total || 0}}</span>
+                      <span class="leave-badge badge-used">{{leaveData.sick.used || 0}}</span>
+                      <span class="leave-badge badge-remaining">{{leaveData.sick.remaining || 0}}</span>
                     </div>
                   </div>
                   <div class="progress-bar">
-                    <div class="progress-fill" style="width: 50%"></div>
+                    <div class="progress-fill" [style.width.%]="leaveData.sick.total ? (leaveData.sick.used / leaveData.sick.total) * 100 : 0"></div>
                   </div>
                 </div>
 
@@ -109,13 +92,13 @@
                   <div class="leave-header">
                     <span class="leave-type">Personal Leave</span>
                     <div class="leave-numbers">
-                      <span class="leave-badge badge-total">15</span>
-                      <span class="leave-badge badge-used">0</span>
-                      <span class="leave-badge badge-remaining">15</span>
+                      <span class="leave-badge badge-total">{{leaveData.personal.total || 0}}</span>
+                      <span class="leave-badge badge-used">{{leaveData.personal.used || 0}}</span>
+                      <span class="leave-badge badge-remaining">{{leaveData.personal.remaining || 0}}</span>
                     </div>
                   </div>
                   <div class="progress-bar">
-                    <div class="progress-fill" style="width: 0%"></div>
+                    <div class="progress-fill" [style.width.%]="leaveData.personal.total ? (leaveData.personal.used / leaveData.personal.total) * 100 : 0"></div>
                   </div>
                 </div>
               </div>
@@ -131,27 +114,27 @@
               <div class="info-grid">
                 <div class="info-item">
                   <div class="info-label">Department</div>
-                  <div class="info-value">EMPLOYEE</div>
+                  <div class="info-value">{{employeeData.department || 'N/A'}}</div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Join Date</div>
-                  <div class="info-value">22 November 2024</div>
+                  <div class="info-value">{{employeeData.joinDate || 'N/A'}}</div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Employee ID</div>
-                  <div class="info-value">EMP001</div>
+                  <div class="info-value">{{profileData?.employeeId || 'N/A'}}</div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Work Experience</div>
-                  <div class="info-value">8 Years</div>
+                  <div class="info-value">{{employeeData.experience || 'N/A'}}</div>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Gender</div>
-                  <div class="info-value">Female</div>
+                  <div class="info-value">{{profileData?.gender || 'N/A'}}</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">ID Proof</div>
-                  <div class="info-value">X Card</div>
+                  <div class="info-label">Designation</div>
+                  <div class="info-value">{{profileData?.designation || 'N/A'}}</div>
                 </div>
               </div>
             </div>
@@ -164,28 +147,28 @@
               <div class="info-grid">
                 <div class="info-item">
                   <div class="info-label">Email</div>
-                  <a class="contact-info">
+                  <a class="contact-info" [href]="'mailto:' + employeeData.email">
                     <i class="fas fa-envelope"></i>
-                    meriembenftima@gmail.com
+                    {{employeeData.email || 'N/A'}}
                   </a>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Phone</div>
-                  <a href="tel:+21695754222" class="contact-info">
+                  <a [href]="'tel:' + employeeData.phone" class="contact-info">
                     <i class="fas fa-phone"></i>
-                    +21695754222
+                    {{employeeData.phone || 'N/A'}}
                   </a>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Emergency Contact</div>
-                  <a href="tel:+21695754222" class="contact-info">
+                  <a [href]="'tel:' + profileData?.emergencyContact" class="contact-info">
                     <i class="fas fa-phone-alt"></i>
-                    +21695754222
+                    {{profileData?.emergencyContact || 'N/A'}}
                   </a>
                 </div>
                 <div class="info-item">
                   <div class="info-label">Current Address</div>
-                  <div class="info-value">sahloul</div>
+                  <div class="info-value">{{profileData?.currentAddress || 'N/A'}}</div>
                 </div>
               </div>
             </div>

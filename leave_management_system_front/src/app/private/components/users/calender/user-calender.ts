@@ -288,6 +288,21 @@ export class UserCalender implements OnInit {
     this.loadCalendarData(); // Reload data for new month
   }
 
+  goToToday(): void {
+    const today = new Date();
+    this.currentMonth = today.getMonth();
+    this.currentYear = today.getFullYear();
+    this.generateCalendar();
+    this.loadCalendarData();
+  }
+
+  goToMonth(month: number, year: number): void {
+    this.currentMonth = month;
+    this.currentYear = year;
+    this.generateCalendar();
+    this.loadCalendarData();
+  }
+
   setView(view: string): void {
     this.selectedView = view;
   }
@@ -314,5 +329,34 @@ export class UserCalender implements OnInit {
 
   onEventClick(event: CalendarEvent): void {
     console.log('Event clicked:', event);
+    // You can implement a modal or detailed view here
+  }
+
+  onDayClick(day: CalendarDay): void {
+    console.log('Day clicked:', day);
+    // You can implement day-specific actions here
+  }
+
+  getEventsForDay(date: Date): CalendarEvent[] {
+    return this.events.filter(event => 
+      date >= event.startDate && date <= event.endDate
+    );
+  }
+
+  getEventCountForDay(date: Date): number {
+    return this.getEventsForDay(date).length;
+  }
+
+  isWeekend(date: Date): boolean {
+    const day = date.getDay();
+    return day === 0 || day === 6; // Sunday or Saturday
+  }
+
+  getHolidaysForMonth(): CalendarEvent[] {
+    return this.events.filter(event => event.type === 'autres');
+  }
+
+  getLeaveRequestsForMonth(): CalendarEvent[] {
+    return this.events.filter(event => event.type !== 'autres');
   }
 }

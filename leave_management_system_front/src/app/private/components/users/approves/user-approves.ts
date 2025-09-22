@@ -28,7 +28,7 @@ interface FilterOptions {
   selector: 'app-leave-statistics',
   standalone: false,
   templateUrl: './user-approves.html',
-  styleUrl: './user-approves.css',
+  styleUrls: ['./user-approves.css'],
 })
 export class UserApproves implements OnInit {
   // Leave statistics data

@@ -137,17 +137,6 @@ export class ApiService {
     return this.http.put<ApiResponse<ProfileData>>(`${this.apiUrl}/profile`, profileData, { headers: this.getHeaders() });
   }
 
-  uploadProfilePicture(file: File): Observable<ApiResponse<{ imageUrl: string }>> {
-    const formData = new FormData();
-    formData.append('profilePicture', file);
-    
-    const headers = new HttpHeaders({
-      ...(localStorage.getItem('authToken') && { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` })
-    });
-
-    return this.http.post<ApiResponse<{ imageUrl: string }>>(`${this.apiUrl}/profile/upload-picture`, formData, { headers });
-  }
-
   // Dashboard APIs
   getDashboardData(): Observable<ApiResponse<DashboardData>> {
     return this.http.get<ApiResponse<DashboardData>>(`${this.apiUrl}/profile/dashboard`, { headers: this.getHeaders() });

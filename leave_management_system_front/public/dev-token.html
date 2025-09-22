@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dev Token Helper</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button { padding: 8px; font-size: 14px; }
+    .log { margin-top: 12px; white-space: pre-wrap; background: #f5f5f5; padding:10px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <h2>Dev Token Helper</h2>
+  <p>Enter a user ID to request a dev token from <code>/auth/dev-token?userId=...</code> and save it to localStorage as <code>authToken</code>.</p>
+  <input id="userId" placeholder="550e8400-e29b-41d4-a716-446655440017" style="width:420px" />
+  <button id="get">Get Token</button>
+  <div class="log" id="log"></div>
+
+  <script>
+    const log = (s) => { document.getElementById('log').textContent += s + '\n'; };
+    document.getElementById('get').addEventListener('click', async () => {
+      const id = document.getElementById('userId').value.trim();
+      if (!id) return log('Please enter a userId');
+      try {
+        log('Requesting /auth/dev-token?userId=' + id);
+        const res = await fetch('/auth/dev-token?userId=' + encodeURIComponent(id));
+        const data = await res.json();
+        log('Response: ' + JSON.stringify(data, null, 2));
+        const token = data.access_token || (data.data && data.data.access_token);
+        if (token) {
+          localStorage.setItem('authToken', token);
+          localStorage.setItem('jwt_token', token);
+          log('Saved token to localStorage as authToken and jwt_token');
+        } else {
+          log('No token in response');
+        }
+      } catch (err) {
+        log('Request failed: ' + err.message || err);
+      }
+    });
+  </script>
+</body>
+</html>

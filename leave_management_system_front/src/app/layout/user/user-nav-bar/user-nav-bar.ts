@@ -13,7 +13,7 @@ interface NavItem {
   selector: 'app-user-nav-bar',
   standalone: false,
   templateUrl: './user-nav-bar.html',
-  styleUrl: './user-nav-bar.css',
+  styleUrls: ['./user-nav-bar.css'],
 })
 export class UserNavBar implements OnInit, OnDestroy {
   navItems: NavItem[] = [

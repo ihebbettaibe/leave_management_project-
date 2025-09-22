@@ -1,28 +1,13 @@
 <div class="sidebar">
   <nav class="nav-menu">
-    <div class="menu-item" (click)="navigateTo('/dashboard')">
-      <div class="menu-icon">📊</div>
-      <span class="menu-label">Dashboard</span>
-    </div>
-
-    <div class="menu-item" (click)="navigateTo('/calender')">
-      <div class="menu-icon">📆</div>
-      <span class="menu-label">Calendar</span>
-    </div>
-
-    <div class="menu-item" (click)="navigateTo('/leaverequests')">
-      <div class="menu-icon">📋</div>
-      <span class="menu-label">Requests</span>
-    </div>
-
-    <div class="menu-item" (click)="navigateTo('/approves')">
-      <div class="menu-icon">✅</div>
-      <span class="menu-label">Approve</span>
-    </div>
-
-    <div class="menu-item" (click)="navigateTo('/profile')">
-      <div class="menu-icon">👥</div>
-      <span class="menu-label">Profil</span>
+    <div 
+      class="menu-item" 
+      *ngFor="let item of filteredMenuItems"
+      (click)="navigateTo(item.route)"
+      [class.active]="item.active"
+    >
+      <div class="menu-icon">{{ item.icon }}</div>
+      <span class="menu-label">{{ item.label }}</span>
     </div>
   </nav>
 </div>

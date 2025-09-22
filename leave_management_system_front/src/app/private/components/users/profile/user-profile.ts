@@ -38,7 +38,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   profileImageUrl: string | null = null;
   isLoading = true;
   error: string | null = null;
-  isUploading = false;
 
   private autoSaveTimer?: number;
   private clockInterval?: number;
@@ -52,7 +51,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     const w = window as any;
     w.closeModal = this.closeModal.bind(this);
     w.downloadProfile = this.downloadProfile.bind(this);
-    w.changeProfileImage = this.changeProfileImage.bind(this);
     w.viewLeaveDetails = this.viewLeaveDetails.bind(this);
     w.requestLeave = this.requestLeave.bind(this);
     w.sendMessage = this.sendMessage.bind(this);
@@ -211,12 +209,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
 
   // removed: exportData()
 
-  changeProfileImage(): void {
-    const input = document.getElementById('profileImageInput') as HTMLInputElement;
-    if (input) {
-      input.click();
-    }
-  }
 
   viewLeaveDetails(leaveType: 'annual' | 'sick' | 'personal'): void {
     const leave = this.leaveData[leaveType];
@@ -499,55 +491,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  onImageSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    
-    if (file) {
-      this.uploadProfileImage(file);
-    }
-  }
-
-  private uploadProfileImage(file: File): void {
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      this.showNotification('Please select a valid image file (JPEG, PNG, GIF)');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      this.showNotification('Image size must be less than 5MB');
-      return;
-    }
-
-    this.isUploading = true;
-
-    this.apiService.uploadProfilePicture(file).subscribe({
-      next: (response: any) => {
-        if (response.success && response.data.imageUrl) {
-          this.profileImageUrl = response.data.imageUrl;
-          this.showNotification('Profile picture updated successfully!');
-          
-          // Update the profile image in the DOM
-          const profileImg = document.querySelector('.profile-image img') as HTMLImageElement;
-          if (profileImg && this.profileImageUrl) {
-            profileImg.src = this.profileImageUrl;
-          }
-        } else {
-          this.showNotification('Failed to upload profile picture');
-        }
-        this.isUploading = false;
-      },
-      error: (error: any) => {
-        console.error('Error uploading profile picture:', error);
-        this.showNotification('Error uploading image. Please try again.');
-        this.isUploading = false;
-      }
-    });
-  }
 
   refreshProfile(): void {
     this.loadProfileData();
