@@ -13,6 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class Dashboard implements OnInit {
   employeeData: EmployeeData = {
+    id: '',
     name: '',
     role: 'employee',
     department: '',
@@ -20,6 +21,7 @@ export class Dashboard implements OnInit {
     phone: '',
     joinDate: '',
     experience: '',
+    status: '',
   };
 
   leaveData: LeaveData = {
@@ -72,6 +74,7 @@ export class Dashboard implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     
     this.employeeData = {
+      id: data.employeeInfo.employeeId || '',
       name: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 'Unknown User',
       role: currentUser?.roles?.[0] || 'employee',
       department: data.employeeInfo.department || 'N/A',
@@ -79,6 +82,7 @@ export class Dashboard implements OnInit {
       phone: data.contactInfo.phone || '',
       joinDate: data.employeeInfo.joinDate ? new Date(data.employeeInfo.joinDate).toLocaleDateString() : '',
       experience: data.employeeInfo.workExperience || '0 Years',
+  status: 'Active',
     };
   }
 

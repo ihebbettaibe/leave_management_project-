@@ -1,5 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -20,9 +21,16 @@ import { UserApproves } from './private/components/users/approves/user-approves'
 import { AdminDashboard } from './private/components/admin/dashboard/admin-dashboard';
 import { AdminSideBar } from './layout/admin/admin-side-bar/admin-side-bar';
 import { AdminNavBar } from './layout/admin/admin-nav-bar/admin-nav-bar';
+// Analytics Components
+import { LeaveAnalytics } from './private/components/analytics/leave-analytics/leave-analytics';
+// Shared Components
+import { ToastContainerComponent } from './shared/components/toast-container/toast-container';
 // Services
 import { ApiService } from './private/services/api.service';
 import { AuthService } from './private/services/auth.service';
+import { ToastService } from './shared/services/toast.service';
+// Chart.js
+import { BaseChartDirective } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -40,14 +48,20 @@ import { AuthService } from './private/services/auth.service';
     AdminDashboard,
     AdminSideBar,
     AdminNavBar,
+    // Analytics Components
+    LeaveAnalytics,
+    // Shared Components
+    ToastContainerComponent,
   ],
   imports: [
     RouterModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    BaseChartDirective,
     RegisterComponent,
   ],
   providers: [

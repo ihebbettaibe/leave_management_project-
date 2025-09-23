@@ -1,242 +1,248 @@
+...existing code...
 <app-user-nav-bar></app-user-nav-bar>
 
-<div class="app-shell">
-  <div class="shell-content">
-    <app-user-side-bar></app-user-side-bar>
+<div class="profile-main">
+  <div class="left-panel">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">
+            {{employeeData.name || 'Unknown User'}}
+          </div>
+          <div class="profile-role">
+            {{profileData?.designation || employeeData.role || 'Employee'}}
+          </div>
+          <div class="profile-id">
+            {{profileData?.employeeId || employeeData.id || 'N/A'}}
+          </div>
+        </div>
+        <div class="status-indicator" [title]="employeeData.status + ' Employee'"></div>
+      </div>
+      
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">{{profileData?.workExperience || employeeData.experience || '0'}}</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{employeeData.department || 'N/A'}}</div>
+          <div class="stat-label">Department</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{employeeData.status || 'N/A'}}</div>
+          <div class="stat-label">Status</div>
+        </div>
+      </div>
+      
+      <div class="quick-actions">
+        <button class="quick-btn" (click)="sendMessage()">
+          <i class="fas fa-message"></i> Message
+        </button>
+        <button class="quick-btn" (click)="scheduleCall()">
+          <i class="fas fa-phone"></i> Call
+        </button>
+        <button class="quick-btn" (click)="viewReports()">
+          <i class="fas fa-chart-line"></i> Reports
+        </button>
+      </div>
+    </div>
 
-    <div class="page-content">
-      <div class="container">
-        <div class="header">
-          <h1><i class="fas fa-user-circle"></i> Employee Profile</h1>
-          <div class="action-buttons">
-            <!--
-            <button class="btn btn-primary" onclick="editProfile()">
-              <i class="fas fa-edit"></i> Edit Profile
-            </button>
-            -->
-            <button class="btn btn-secondary" onclick="downloadProfile()">
-              <i class="fas fa-download"></i> Download PDF
-            </button>
-            <!--
-            <button class="btn btn-success" onclick="exportData()">
-              <i class="fas fa-file-export"></i> Export Data
-            </button>
-            -->
+    <div class="leave-summary">
+      <h3 class="section-title">
+        <i class="fas fa-calendar-alt"></i>
+        Leave Balance
+      </h3>
+      <div class="leave-items">
+        <div class="leave-item" (click)="viewLeaveDetails('annual')">
+          <div class="leave-header">
+            <span class="leave-type">Annual Leave</span>
+            <div class="leave-numbers">
+              <span class="leave-badge badge-total">{{leaveData.annual.total}}</span>
+              <span class="leave-badge badge-used">{{leaveData.annual.used}}</span>
+              <span class="leave-badge badge-remaining">{{leaveData.annual.remaining}}</span>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getLeavePercentage('annual')"></div>
           </div>
         </div>
 
-        <div class="profile-main">
-          <div class="left-panel">
-            <div id="profilePrintable">
-              <div class="profile-card">
-                <div class="profile-name">{{employeeData.name || 'Unknown User'}}</div>
-                <div class="profile-role">{{employeeData.role || 'Employee'}}</div>
-                <div class="profile-id">{{profileData?.employeeId || 'N/A'}}</div>
-
-                <div class="stats-grid">
-                  <div class="stat-item">
-                    <div class="stat-value">{{employeeData.experience || '0'}}</div>
-                    <div class="stat-label">Years Experience</div>
-                  </div>
-                </div>
-
-                <div class="quick-actions">
-                  <button class="quick-btn" onclick="sendMessage()">
-                    <i class="fas fa-message"></i> Message
-                  </button>
-                  <button class="quick-btn" onclick="scheduleCall()">
-                    <i class="fas fa-phone"></i> Call
-                  </button>
-                  <button class="quick-btn" onclick="viewReports()">
-                    <i class="fas fa-chart-line"></i> Contract
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="leave-summary">
-              <h3 class="section-title">
-                <i class="fas fa-calendar-alt"></i>
-                Leave Balance
-              </h3>
-              <div class="leave-items">
-                <div class="leave-item" onclick="viewLeaveDetails('annual')">
-                  <div class="leave-header">
-                    <span class="leave-type">Annual Leave</span>
-                    <div class="leave-numbers">
-                      <span class="leave-badge badge-total">{{leaveData.annual.total || 0}}</span>
-                      <span class="leave-badge badge-used">{{leaveData.annual.used || 0}}</span>
-                      <span class="leave-badge badge-remaining">{{leaveData.annual.remaining || 0}}</span>
-                    </div>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" [style.width.%]="leaveData.annual.total ? (leaveData.annual.used / leaveData.annual.total) * 100 : 0"></div>
-                  </div>
-                </div>
-
-                <div class="leave-item" onclick="viewLeaveDetails('sick')">
-                  <div class="leave-header">
-                    <span class="leave-type">Sick Leave</span>
-                    <div class="leave-numbers">
-                      <span class="leave-badge badge-total">{{leaveData.sick.total || 0}}</span>
-                      <span class="leave-badge badge-used">{{leaveData.sick.used || 0}}</span>
-                      <span class="leave-badge badge-remaining">{{leaveData.sick.remaining || 0}}</span>
-                    </div>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" [style.width.%]="leaveData.sick.total ? (leaveData.sick.used / leaveData.sick.total) * 100 : 0"></div>
-                  </div>
-                </div>
-
-                <div class="leave-item" onclick="viewLeaveDetails('personal')">
-                  <div class="leave-header">
-                    <span class="leave-type">Personal Leave</span>
-                    <div class="leave-numbers">
-                      <span class="leave-badge badge-total">{{leaveData.personal.total || 0}}</span>
-                      <span class="leave-badge badge-used">{{leaveData.personal.used || 0}}</span>
-                      <span class="leave-badge badge-remaining">{{leaveData.personal.remaining || 0}}</span>
-                    </div>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" [style.width.%]="leaveData.personal.total ? (leaveData.personal.used / leaveData.personal.total) * 100 : 0"></div>
-                  </div>
-                </div>
-              </div>
+        <div class="leave-item" (click)="viewLeaveDetails('sick')">
+          <div class="leave-header">
+            <span class="leave-type">Sick Leave</span>
+            <div class="leave-numbers">
+              <span class="leave-badge badge-total">{{leaveData.sick.total}}</span>
+              <span class="leave-badge badge-used">{{leaveData.sick.used}}</span>
+              <span class="leave-badge badge-remaining">{{leaveData.sick.remaining}}</span>
             </div>
           </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getLeavePercentage('sick')"></div>
+          </div>
+        </div>
 
-          <div class="right-panel">
-            <div class="info-card">
-              <h3 class="section-title">
-                <i class="fas fa-id-card"></i>
-                Employee Information
-              </h3>
-              <div class="info-grid">
-                <div class="info-item">
-                  <div class="info-label">Department</div>
-                  <div class="info-value">{{employeeData.department || 'N/A'}}</div>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Join Date</div>
-                  <div class="info-value">{{employeeData.joinDate || 'N/A'}}</div>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Employee ID</div>
-                  <div class="info-value">{{profileData?.employeeId || 'N/A'}}</div>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Work Experience</div>
-                  <div class="info-value">{{employeeData.experience || 'N/A'}}</div>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Gender</div>
-                  <div class="info-value">{{profileData?.gender || 'N/A'}}</div>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Designation</div>
-                  <div class="info-value">{{profileData?.designation || 'N/A'}}</div>
-                </div>
-              </div>
+        <div class="leave-item" (click)="viewLeaveDetails('personal')">
+          <div class="leave-header">
+            <span class="leave-type">Personal Leave</span>
+            <div class="leave-numbers">
+              <span class="leave-badge badge-total">{{leaveData.personal.total}}</span>
+              <span class="leave-badge badge-used">{{leaveData.personal.used}}</span>
+              <span class="leave-badge badge-remaining">{{leaveData.personal.remaining}}</span>
             </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getLeavePercentage('personal')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            <div class="info-card">
-              <h3 class="section-title">
-                <i class="fas fa-address-book"></i>
-                Contact Information
-              </h3>
-              <div class="info-grid">
-                <div class="info-item">
-                  <div class="info-label">Email</div>
-                  <a class="contact-info" [href]="'mailto:' + employeeData.email">
-                    <i class="fas fa-envelope"></i>
-                    {{employeeData.email || 'N/A'}}
-                  </a>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Phone</div>
-                  <a [href]="'tel:' + employeeData.phone" class="contact-info">
-                    <i class="fas fa-phone"></i>
-                    {{employeeData.phone || 'N/A'}}
-                  </a>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Emergency Contact</div>
-                  <a [href]="'tel:' + profileData?.emergencyContact" class="contact-info">
-                    <i class="fas fa-phone-alt"></i>
-                    {{profileData?.emergencyContact || 'N/A'}}
-                  </a>
-                </div>
-                <div class="info-item">
-                  <div class="info-label">Current Address</div>
-                  <div class="info-value">{{profileData?.currentAddress || 'N/A'}}</div>
-                </div>
-              </div>
-            </div>
+  <div class="right-panel">
+    <div class="info-card">
+      <h3 class="section-title">
+        <i class="fas fa-id-card"></i>
+        Employee Information
+      </h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Department</div>
+          <div class="info-value">{{profileData?.department || dashboardData?.employeeInfo?.department || 'N/A'}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Join Date</div>
+          <div class="info-value">{{formatDate(profileData?.joinDate || dashboardData?.employeeInfo?.joinDate) || 'N/A'}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Employee ID</div>
+          <div class="info-value">{{profileData?.employeeId || dashboardData?.employeeInfo?.employeeId || 'N/A'}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Work Experience</div>
+          <div class="info-value">{{profileData?.workExperience || dashboardData?.employeeInfo?.workExperience || 'N/A'}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Gender</div>
+          <div class="info-value">{{profileData?.gender || dashboardData?.employeeInfo?.gender || 'N/A'}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Designation</div>
+          <div class="info-value">{{profileData?.designation || dashboardData?.employeeInfo?.designation || 'N/A'}}</div>
+        </div>
+      </div>
+    </div>
 
-            <div class="info-card">
-              <h3 class="section-title">
-                <i class="fas fa-history"></i>
-                Recent Activity
-              </h3>
-              <div class="timeline-section">
-                <div class="timeline">
-                  <div class="timeline-item">
-                    <div class="timeline-date">Aug 10, 2025</div>
-                    <div class="timeline-event">
-                      Applied for Annual Leave (Approved)
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div class="info-card">
+      <h3 class="section-title">
+        <i class="fas fa-address-book"></i>
+        Contact Information
+      </h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <a class="contact-info" [href]="'mailto:' + (profileData?.email || dashboardData?.contactInfo?.email || '')">
+            <i class="fas fa-envelope"></i>
+            {{profileData?.email || dashboardData?.contactInfo?.email || 'N/A'}}
+          </a>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Phone</div>
+          <a [href]="'tel:' + (profileData?.phone || dashboardData?.contactInfo?.phone || '')" class="contact-info">
+            <i class="fas fa-phone"></i>
+            {{profileData?.phone || dashboardData?.contactInfo?.phone || 'N/A'}}
+          </a>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Emergency Contact</div>
+          <a [href]="'tel:' + (profileData?.emergencyContact || dashboardData?.contactInfo?.emergencyContact || '')" class="contact-info">
+            <i class="fas fa-phone-alt"></i>
+            {{profileData?.emergencyContact || dashboardData?.contactInfo?.emergencyContact || 'N/A'}}
+          </a>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Current Address</div>
+          <div class="info-value">{{profileData?.currentAddress || dashboardData?.contactInfo?.currentAddress || 'N/A'}}</div>
+        </div>
+      </div>
+    </div>
 
-            <div class="holidays-card">
-              <h3 class="section-title">
-                <i class="fas fa-calendar-check"></i>
-                Upcoming Holidays
-              </h3>
-
-              <div class="filter-tabs">
-                <button
-                  class="filter-tab active"
-                  onclick="filterHolidays('all')"
-                >
-                  All
-                </button>
-                <button class="filter-tab" onclick="filterHolidays('upcoming')">
-                  Upcoming
-                </button>
-                <button class="filter-tab" onclick="filterHolidays('optional')">
-                  Optional
-                </button>
-                <button class="filter-tab" onclick="filterHolidays('national')">
-                  National
-                </button>
-              </div>
-
-              <div class="holidays-list">
-                <div class="holiday-item" data-category="national">
-                  <span class="holiday-emoji">🇮🇳</span>
-                  <div class="holiday-info">
-                    <div class="holiday-name">Independence Day</div>
-                    <div class="holiday-date">August 15, 2025</div>
-                  </div>
-                  <span class="holiday-days-left"></span>
-                </div>
-
-                <div class="holiday-item" data-category="national">
-                  <span class="holiday-emoji">🎉</span>
-                  <div class="holiday-info">
-                    <div class="holiday-name">New Year's Day</div>
-                    <div class="holiday-date">January 1, 2026</div>
-                  </div>
-                  <span class="holiday-days-left"></span>
-                </div>
-              </div>
+    <div class="info-card">
+      <h3 class="section-title">
+        <i class="fas fa-history"></i>
+        Recent Activity
+      </h3>
+      <div class="timeline-section">
+        <div class="timeline">
+          <div *ngIf="dashboardData?.recentActivities?.length === 0 || !dashboardData?.recentActivities" class="no-activities">
+            <p>No recent activities found</p>
+          </div>
+          <div *ngFor="let activity of dashboardData?.recentActivities" class="timeline-item">
+            <div class="timeline-date">{{formatDate(activity.date)}}</div>
+            <div class="timeline-event">
+              {{activity.description}}
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="holidays-card">
+      <h3 class="section-title">
+        <i class="fas fa-calendar-check"></i>
+        Upcoming Holidays
+      </h3>
+
+      <div class="filter-tabs">
+        <button
+          class="filter-tab active"
+          (click)="filterHolidays('all')"
+        >
+          All
+        </button>
+        <button class="filter-tab" (click)="filterHolidays('upcoming')">
+          Upcoming
+        </button>
+        <button class="filter-tab" (click)="filterHolidays('optional')">
+          Optional
+        </button>
+        <button class="filter-tab" (click)="filterHolidays('national')">
+          National
+        </button>
+      </div>
+
+      <div class="holidays-list">
+        <div *ngIf="holidays?.length === 0 || !holidays" class="no-holidays">
+          <p>No holidays found</p>
+        </div>
+        <div *ngFor="let holiday of holidays" class="holiday-item" [attr.data-category]="holiday.type || 'national'">
+          <span class="holiday-emoji">{{holiday.emoji || '🎉'}}</span>
+          <div class="holiday-info">
+            <div class="holiday-name">{{holiday.name}}</div>
+            <div class="holiday-date">{{formatDate(holiday.date)}}</div>
+          </div>
+          <span class="holiday-days-left">{{getDaysUntilHoliday(holiday.date)}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="loading-container">
+  <div class="loading-spinner">
+    <div class="loading"></div>
+    <p>Loading profile data...</p>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="error && !isLoading" class="error-container">
+  <div class="error-message">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Error Loading Profile</h3>
+    <p>{{error}}</p>
+    <button class="btn btn-primary" (click)="loadProfileData()">
+      <i class="fas fa-refresh"></i> Retry
+    </button>
   </div>
 </div>

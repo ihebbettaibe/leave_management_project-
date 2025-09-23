@@ -1,6 +1,7 @@
 // types/employee-data.type.ts
 
 export interface EmployeeData {
+  id: string;
   name: string;
   role: string;
   department: string;
@@ -8,4 +9,5 @@ export interface EmployeeData {
   phone: string;
   joinDate: string;
   experience: string;
+  status: string;
 }

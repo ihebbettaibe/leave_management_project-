@@ -19,6 +19,7 @@ interface MenuItem {
 export class UserSideBar implements OnInit {
   menuItems: MenuItem[] = [
     { icon: '📊', label: 'Dashboard', route: '/dashboard' },
+    { icon: '📈', label: 'Analytics', route: '/analytics' },
     { icon: '👥', label: 'profil', route: '/profile', active: true },
     { icon: '📋', label: 'Requests', route: '/leaverequests' },
     { icon: '✅', label: 'Approve', route: '/approves', requiresRole: ['admin', 'hr'] },

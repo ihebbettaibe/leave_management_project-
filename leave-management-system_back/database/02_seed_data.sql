@@ -10,7 +10,8 @@ INSERT INTO teams (name) VALUES
 ('Sales'),
 ('Operations'),
 ('Legal'),
-('Customer Support');
+('Customer Support')
+ON CONFLICT (name) DO NOTHING;
 
 -- Insert Leave Types
 INSERT INTO leave_types (name, max_days) VALUES
@@ -22,9 +23,12 @@ INSERT INTO leave_types (name, max_days) VALUES
 ('Bereavement Leave', 5),
 ('Emergency Leave', 3),
 ('Study Leave', 10),
-('Unpaid Leave', 30);
+('Unpaid Leave', 30)
+ON CONFLICT (name) DO NOTHING;
 
 -- Insert Sample Users (passwords are hashed for 'password123')
+
+
 INSERT INTO users (id, username, fullname, email, phone_number, password, is_active, roles, team_id, date_of_birth, address) VALUES
 -- HR Team
 ('550e8400-e29b-41d4-a716-446655440001', 'sarah.johnson', 'Sarah Johnson', 'sarah.johnson@company.com', '+1-555-0101', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{HR_MANAGER}', 1, '1985-03-15', '123 Oak Street, New York, NY 10001'),
@@ -37,8 +41,8 @@ INSERT INTO users (id, username, fullname, email, phone_number, password, is_act
 
 -- Marketing Team
 ('550e8400-e29b-41d4-a716-446655440006', 'lisa.martinez', 'Lisa Martinez', 'lisa.martinez@company.com', '+1-555-0106', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{MANAGER}', 3, '1987-01-25', '987 Birch Road, New York, NY 10006'),
-('550e8400-e29b-41d4-a716-446655440007', 'robert.anderson', 'Robert Anderson', 'robert.anderson@company.com', '+1-555-0107', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{EMPLOYEE}', 3, '1989-11-12', '147 Walnut Avenue, New York, NY 10007'),
-
+('550e8400-e29b-41d4-a716-446655440007', 'robert.anderson', 'Robert Anderson', 'robert.anderson@company.com', '+1-555-0107', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{EMPLOYEE}', 3, '1989-11-12', '147 Walnut Avenue, New York, NY 10007')
+ON CONFLICT (id) DO NOTHING;
 -- Finance Team
 ('550e8400-e29b-41d4-a716-446655440008', 'amanda.taylor', 'Amanda Taylor', 'amanda.taylor@company.com', '+1-555-0108', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{FINANCE_MANAGER}', 4, '1984-06-30', '258 Cherry Street, New York, NY 10008'),
 ('550e8400-e29b-41d4-a716-446655440009', 'christopher.thomas', 'Christopher Thomas', 'christopher.thomas@company.com', '+1-555-0109', '$2b$10$X5H1uTjHwE4zQCKVw.5oXO9KJmhBQVjBQsOwF8vO9gFKPJX9.yh9e', true, '{EMPLOYEE}', 4, '1992-04-14', '369 Poplar Lane, New York, NY 10009'),

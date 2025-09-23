@@ -44,6 +44,36 @@ export class LeaveBalancesService implements LeaveBalancesPort {
     return await this.repo.find();
   }
 
+  async findByUserId(userId: string) {
+    const balances = await this.repo.find({ 
+      where: { user: { id: userId } },
+      relations: ['leaveType', 'user']
+    });
+    
+    // If no balances found, return default balances
+    if (!balances || balances.length === 0) {
+      return {
+        annual: { total: 25, used: 0, remaining: 25 },
+        sick: { total: 12, used: 0, remaining: 12 },
+        personal: { total: 15, used: 0, remaining: 15 }
+      };
+    }
+    
+    // Transform to expected format
+    const result = {};
+    balances.forEach(balance => {
+      const leaveTypeName = balance.leaveType.name.toLowerCase();
+      const total = balance.leaveType.maxDays || 0;
+      const used = balance.used || 0;
+      const carryover = balance.carryover || 0;
+      const remaining = Math.max(0, total + carryover - used);
+      
+      result[leaveTypeName] = { total: total + carryover, used, remaining };
+    });
+    
+    return result;
+  }
+
   async findOne(id: number) {
   const lb = await this.repo.findOne({ where: { id } });
     if (!lb) throw new NotFoundException(`LeaveBalance #${id} not found`);

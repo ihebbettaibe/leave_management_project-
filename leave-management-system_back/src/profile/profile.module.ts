@@ -9,9 +9,13 @@ import { User } from '../users/entities/users.entity';
 import { ProfileRepository } from './repositories/profile.repository';
 import { ActivityRepository } from './repositories/activity.repository';
 import { PerformanceRepository } from './repositories/performance.repository';
+import { LeaveBalancesModule } from '../leave-balances/leave-balances.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EmployeeProfile, Activity, Performance, User])],
+  imports: [
+    TypeOrmModule.forFeature([EmployeeProfile, Activity, Performance, User]),
+    LeaveBalancesModule
+  ],
   providers: [ProfileService, ProfileRepository, ActivityRepository, PerformanceRepository],
   controllers: [ProfileController],
   exports: [ProfileService],

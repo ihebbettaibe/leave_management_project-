@@ -11,13 +11,14 @@ import { ApiService, ProfileData, DashboardData } from '../../../services/api.se
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-employee-profile',
+  selector: 'app-user-profile',
   templateUrl: './user-profile.html',
   styleUrls: ['./user-profile.css'],
   standalone: false,
 })
 export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   employeeData: EmployeeData = {
+    id: '',
     name: '',
     role: 'employee',
     department: '',
@@ -25,6 +26,7 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     phone: '',
     joinDate: '',
     experience: '',
+    status: '',
   };
 
   leaveData: LeaveData = {
@@ -36,6 +38,7 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   profileData: ProfileData | null = null;
   dashboardData: DashboardData | null = null;
   profileImageUrl: string | null = null;
+  holidays: any[] = [];
   isLoading = true;
   error: string | null = null;
 
@@ -89,7 +92,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    // optional: keep this; it only wires autosave if an #editModal exists
     const editModal = document.getElementById('editModal');
     editModal?.addEventListener('click', () => this.setupAutoSave());
   }
@@ -102,39 +104,37 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape') this.closeModal();
-    // removed: Ctrl+E (edit)
     if (e.ctrlKey && e.key.toLowerCase() === 'd') {
       e.preventDefault();
       this.downloadProfile();
     }
   }
 
-  // removed: editProfile()
-
-  closeModal(): void {
-    document
-      .querySelectorAll('.modal')
-      .forEach((m) => m.classList.remove('show'));
+  editProfile(): void {
+    const modal = document.getElementById('editModal');
+    if (modal) {
+      this.populateEditForm();
+      modal.classList.add('show');
+      this.setupAutoSave();
+    }
   }
 
-  // removed: saveProfile()
+  closeModal(): void {
+    document.querySelectorAll('.modal').forEach((m) => m.classList.remove('show'));
+  }
 
   async downloadProfile(): Promise<void> {
     this.showNotification('Preparing PDF…');
 
     try {
-      // Dynamic imports avoid ESM config headaches
       const [{ jsPDF }, html2canvasModule] = await Promise.all([
         import('jspdf'),
         import('html2canvas'),
       ]);
       const html2canvas = html2canvasModule.default;
 
-      // Choose what to print: wrap your profile in <div id="profilePrintable">…</div>
-      const target =
-        document.getElementById('profilePrintable') || document.body;
+      const target = document.getElementById('profilePrintable') || document.body;
 
-      // Render DOM to canvas (higher scale => sharper PDF)
       const canvas = await html2canvas(target, {
         scale: 2,
         useCORS: true,
@@ -143,58 +143,31 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
       });
 
       const imgData = canvas.toDataURL('image/png');
-
-      // A4 in mm
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Canvas size in px
       const imgWidthPx = canvas.width;
       const imgHeightPx = canvas.height;
       const imgRatio = imgWidthPx / imgHeightPx;
 
-      // Convert px to mm by fitting width to page
       const pdfImgWidth = pageWidth;
       const pdfImgHeight = pdfImgWidth / imgRatio;
 
       let position = 0;
       let heightLeft = pdfImgHeight;
 
-      // Add first page
-      pdf.addImage(
-        imgData,
-        'PNG',
-        0,
-        position,
-        pdfImgWidth,
-        pdfImgHeight,
-        '',
-        'FAST'
-      );
+      pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, pdfImgHeight, '', 'FAST');
       heightLeft -= pageHeight;
 
-      // Add extra pages if content overflows
       while (heightLeft > 0) {
         pdf.addPage();
-        position = heightLeft * -1; // move up
-        pdf.addImage(
-          imgData,
-          'PNG',
-          0,
-          position,
-          pdfImgWidth,
-          pdfImgHeight,
-          '',
-          'FAST'
-        );
+        position = heightLeft * -1;
+        pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, pdfImgHeight, '', 'FAST');
         heightLeft -= pageHeight;
       }
 
-      const safeName = (this.employeeData?.name || 'profile').replace(
-        /\s+/g,
-        '_'
-      );
+      const safeName = (this.employeeData?.name || 'profile').replace(/\s+/g, '_');
       const date = new Date().toISOString().slice(0, 10);
       pdf.save(`${safeName}_Profile_${date}.pdf`);
 
@@ -202,13 +175,9 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     } catch (err) {
       console.error(err);
       this.showNotification('PDF failed. Falling back to print…');
-      // Zero-dependency fallback: user can "Save as PDF" from print dialog
       setTimeout(() => window.print(), 150);
     }
   }
-
-  // removed: exportData()
-
 
   viewLeaveDetails(leaveType: 'annual' | 'sick' | 'personal'): void {
     const leave = this.leaveData[leaveType];
@@ -264,25 +233,16 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     this.showNotification('Loading employee reports...');
   }
 
-  filterHolidays(
-    filter: 'all' | 'upcoming' | 'optional' | string,
-    ev?: Event
-  ): void {
-    document
-      .querySelectorAll('.filter-tab')
-      .forEach((tab) => tab.classList.remove('active'));
-    if (ev && ev.target instanceof HTMLElement)
-      ev.target.classList.add('active');
+  filterHolidays(filter: 'all' | 'upcoming' | 'optional' | string, ev?: Event): void {
+    document.querySelectorAll('.filter-tab').forEach((tab) => tab.classList.remove('active'));
+    if (ev && ev.target instanceof HTMLElement) ev.target.classList.add('active');
 
-    const holidays = document.querySelectorAll(
-      '.holiday-item'
-    ) as NodeListOf<HTMLElement>;
+    const holidays = document.querySelectorAll('.holiday-item') as NodeListOf<HTMLElement>;
     holidays.forEach((h) => {
       if (filter === 'all') h.style.display = 'flex';
       else {
         const category = h.getAttribute('data-category');
-        h.style.display =
-          filter === 'upcoming' || category === filter ? 'flex' : 'none';
+        h.style.display = filter === 'upcoming' || category === filter ? 'flex' : 'none';
       }
     });
   }
@@ -313,14 +273,12 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setupAutoSave(): void {
-    const inputs = document.querySelectorAll(
-      '.form-input'
-    ) as NodeListOf<HTMLInputElement>;
+    const inputs = document.querySelectorAll('.form-input') as NodeListOf<HTMLInputElement>;
     inputs.forEach((input) => {
       input.addEventListener('input', () => {
         if (this.autoSaveTimer) clearTimeout(this.autoSaveTimer);
         this.autoSaveTimer = window.setTimeout(() => {
-          // backend persist if needed
+          // Auto-save logic here
         }, 2000);
       });
     });
@@ -331,11 +289,11 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    // Load both profile and dashboard data
     Promise.all([
       this.apiService.getProfile().toPromise(),
-      this.apiService.getDashboardData().toPromise()
-    ]).then(([profileResponse, dashboardResponse]) => {
+      this.apiService.getDashboardData().toPromise(),
+      this.apiService.getHolidays().toPromise()
+    ]).then(([profileResponse, dashboardResponse, holidaysResponse]) => {
       if (profileResponse?.success && profileResponse.data) {
         this.profileData = profileResponse.data;
         this.updateEmployeeDataFromProfile(profileResponse.data);
@@ -348,13 +306,16 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
         this.updateEmployeeDataFromDashboard(dashboardResponse.data);
       }
 
+      if (holidaysResponse?.success && holidaysResponse.data) {
+        this.holidays = holidaysResponse.data;
+      }
+
       this.isLoading = false;
     }).catch((error: any) => {
       console.error('Error loading profile data:', error);
       this.error = 'Failed to load profile data. Please try again.';
       this.isLoading = false;
 
-      // Fallback to current user info
       const currentUser = this.authService.getCurrentUser();
       if (currentUser) {
         this.employeeData.name = `${currentUser.firstName} ${currentUser.lastName}`;
@@ -408,16 +369,6 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
           remaining: dashboard.leaveBalance.personal?.remaining || 0,
         },
       };
-    }
-  }
-
-  editProfile(): void {
-    const modal = document.getElementById('editModal');
-    if (modal) {
-      // Populate form fields with current data
-      this.populateEditForm();
-      modal.style.display = 'block';
-      this.setupAutoSave();
     }
   }
 
@@ -491,20 +442,56 @@ export class UserProfile implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-
   refreshProfile(): void {
     this.loadProfileData();
   }
 
   updateClock(): void {
-    // minimal clock hook
+    // Clock update logic
   }
 
   initializeCharts(): void {
-    // charts init placeholder
+    // Charts initialization
   }
 
   private capFirst(s: string): string {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  getLeavePercentage(leaveType: 'annual' | 'sick' | 'personal'): number {
+    const leave = this.leaveData[leaveType];
+    if (leave.total === 0) return 0;
+    return Math.round((leave.used / leave.total) * 100);
+  }
+
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  }
+
+  getDaysUntilHoliday(holidayDate: string): string {
+    if (!holidayDate) return '';
+    try {
+      const today = new Date();
+      const holiday = new Date(holidayDate);
+      const diffTime = holiday.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) return 'Past';
+      if (diffDays === 0) return 'Today';
+      if (diffDays === 1) return '1 day';
+      return `${diffDays} days`;
+    } catch (error) {
+      return '';
+    }
   }
 }

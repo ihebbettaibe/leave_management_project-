@@ -1,4 +1,4 @@
-import { IIdentifiable } from 'src/shared/types/Interfaces/identifiable.interfaces';
+import { IIdentifiable } from '../../../shared/types/Interfaces/identifiable.interfaces';
 
 export interface IUser extends IIdentifiable {
   username: string;

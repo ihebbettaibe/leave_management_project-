@@ -1,8 +1,9 @@
-import { Controller, Post, Body, UnauthorizedException, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, UseInterceptors, UploadedFile, Get, UseGuards, Request, Query, ForbiddenException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './types/register-user.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Express } from 'express';
@@ -12,48 +13,52 @@ import { Express } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // Hardcoded users from database for testing (since DB connection is failing)
-  private readonly testUsers = [
-    { email: 'admin@company.com', password: 'password123', id: '1', firstName: 'Admin', lastName: 'User', roles: ['admin', 'hr'] },
-    { email: 'sarah.johnson@company.com', password: 'password123', id: '2', firstName: 'Sarah', lastName: 'Johnson', roles: ['hr', 'manager'] },
-    { email: 'david.wilson@company.com', password: 'password123', id: '3', firstName: 'David', lastName: 'Wilson', roles: ['manager'] },
-    { email: 'emily.davis@company.com', password: 'password123', id: '4', firstName: 'Emily', lastName: 'Davis', roles: ['employee'] },
-    { email: 'michael.brown@company.com', password: 'password123', id: '5', firstName: 'Michael', lastName: 'Brown', roles: ['employee'] },
-  ];
+  // DEV helper: issue a token for a user by ID (only in non-production environments)
+  @Get('dev-token')
+  async devToken(@Query('userId') userId: string) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new ForbiddenException('Not available in production');
+    }
+    if (!userId) {
+      return { success: false, message: 'userId query parameter is required' };
+    }
+
+    try {
+      const user = await this.authService.findUserById(userId);
+      const result = await this.authService.login(user);
+      // Mirror login response structure
+      return result;
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
 
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(@Body() loginDto: { email: string; password: string }) {
-    console.log('🔍 Login attempt received:', loginDto.email);
-    
-    const user = this.testUsers.find(u => u.email === loginDto.email && u.password === loginDto.password);
-    
-    if (!user) {
-      console.log('❌ Login failed for:', loginDto.email);
-      throw new UnauthorizedException('Invalid email or password');
+  // Accept either { email, password } (frontend) or { identifier, password }
+  async login(@Body() loginDto: { email?: string; identifier?: string; password: string }) {
+    const identifier = loginDto.identifier || loginDto.email;
+    console.log('🔍 Login attempt received for identifier/email:', identifier);
+    if (!identifier || !loginDto.password) {
+      console.log('❌ Login failed - missing identifier or password');
+      throw new UnauthorizedException('Missing credentials');
     }
 
-    // Mock JWT token (in real implementation this would be signed)
-    const mockToken = `mock.jwt.token.${user.id}.${Date.now()}`;
-
-    console.log('✅ Login successful for:', user.email, 'Role:', user.roles.join(', '));
-
-    return {
-      success: true,
-      data: {
-        access_token: mockToken,
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          roles: user.roles,
-        },
-      },
-      message: 'Login successful'
-    };
+    try {
+      const result = await this.authService.validateUserIdentifier(identifier, loginDto.password);
+      console.log('✅ Login successful for:', identifier);
+      // Return existing structure but also include top-level access_token and user for older frontends
+      return {
+        ...result,
+        access_token: result.data?.access_token,
+        user: result.data?.user,
+      };
+    } catch (error) {
+      console.log('❌ Login failed for:', identifier, error.message);
+      throw new UnauthorizedException('Invalid username/email or password');
+    }
   }
 
   @Post('register')
@@ -106,6 +111,58 @@ export class AuthController {
     } catch (error) {
       console.log('❌ Registration failed for:', registerDto.email, error.message);
       throw error;
+    }
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'User profile retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getCurrentUser(@Request() req) {
+    const userId = req.user.userId || req.user.id;
+    console.log('🔍 Getting current user for ID:', userId);
+    console.log('🔍 Full req.user object:', req.user);
+    
+    try {
+      // First, just return the JWT payload data to debug
+      if (!userId) {
+        console.log('❌ No userId found in request');
+        return {
+          success: false,
+          error: 'No user ID found in token',
+          user: req.user,
+          message: 'Invalid token payload'
+        };
+      }
+      
+      const user = await this.authService.findUserById(userId);
+      console.log('✅ Current user retrieved:', user.email);
+      
+      return {
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullname: user.fullname,
+          phoneNumber: user.phoneNumber,
+          teamId: user.teamId,
+          address: user.address,
+          dateOfBirth: user.dateOfBirth,
+          bio: user.bio,
+          profilePictureUrl: user.profilePictureUrl,
+          isActive: user.isActive,
+          roles: user.roles,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        },
+        message: 'User profile retrieved successfully'
+      };
+    } catch (error) {
+      console.log('❌ Failed to get current user:', error.message);
+      throw new UnauthorizedException('Unable to retrieve user profile');
     }
   }
 }

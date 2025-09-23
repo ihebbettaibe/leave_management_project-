@@ -61,40 +61,7 @@ export class UserCalender implements OnInit {
 
   leaveTypes = LEAVE_TYPES;
 
-  events: CalendarEvent[] = [
-    {
-      id: '1',
-      title: 'Hassia Wandare',
-      type: 'congé-payé',
-      startDate: new Date(2025, this.getJavaScriptMonth(9), 10),
-      endDate: new Date(2025, this.getJavaScriptMonth(9), 12),
-      color: '#3b82f6',
-    },
-    {
-      id: '2',
-      title: 'Aminata D. Diallo',
-      type: 'congé-maternité',
-      startDate: new Date(2025, this.getJavaScriptMonth(8), 10),
-      endDate: new Date(2025, this.getJavaScriptMonth(8), 15),
-      color: '#ec4899',
-    },
-    {
-      id: '3',
-      title: 'Christophe Wade',
-      type: 'congé-maladie',
-      startDate: new Date(2025, this.getJavaScriptMonth(9), 18),
-      endDate: new Date(2025, this.getJavaScriptMonth(9), 18),
-      color: '#ec4899',
-    },
-    {
-      id: '4',
-      title: 'maram mejri',
-      type: 'congé-maternité',
-      startDate: new Date(2025, this.getJavaScriptMonth(8), 5),
-      endDate: new Date(2025, this.getJavaScriptMonth(8), 9),
-      color: '#10b981',
-    },
-  ];
+  events: CalendarEvent[] = [];
 
   isLoading = false;
   holidays: any[] = [];

@@ -16,6 +16,7 @@ import { LeaveBalancesModule } from './leave-balances/leave-balances.module';
 import { LeaveTypesModule } from './leave-types/leave-types.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { LeaveRequestsModule } from './leave-requests/leave-requests.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { LeaveRequestsModule } from './leave-requests/leave-requests.module';
     LeaveTypesModule,
     CalendarModule,
     LeaveRequestsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

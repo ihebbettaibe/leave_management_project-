@@ -774,6 +774,80 @@ body {
   white-space: nowrap;
   z-index: 1000;
 }
+/* Loading and Error States */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 40px;
+}
+
+.loading-spinner {
+  text-align: center;
+}
+
+.loading-spinner .loading {
+  margin: 0 auto 20px;
+}
+
+.loading-spinner p {
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 40px;
+}
+
+.error-message {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.error-message i {
+  font-size: 48px;
+  color: #ef4444;
+  margin-bottom: 20px;
+}
+
+.error-message h3 {
+  color: #1e293b;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.error-message p {
+  color: #64748b;
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.no-activities,
+.no-holidays {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.no-activities p,
+.no-holidays p {
+  margin: 0;
+  font-size: 14px;
+}
+
 @media print {
   .navbar,
   .sidebar,

@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = 3002;
+const PORT = 4300;
 
 console.log('🚀 Starting Leave Management System Frontend Server...');
 

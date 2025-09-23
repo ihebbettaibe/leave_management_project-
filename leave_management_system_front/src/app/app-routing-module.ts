@@ -9,6 +9,8 @@ import { UserProfile } from './private/components/users/profile/user-profile';
 import { UserCalender } from './private/components/users/calender/user-calender';
 import { LeaveRequestComponent } from './private/components/users/leave-requests/user-leave-requests';
 import { UserApproves } from './private/components/users/approves/user-approves';
+// Analytics Components
+import { LeaveAnalytics } from './private/components/analytics/leave-analytics/leave-analytics';
 // Admin Components
 import { AdminDashboard } from './private/components/admin/dashboard/admin-dashboard';
 // Guards
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'dashboard', component: Dashboard, canActivate: [AuthGuard] },
   { path: 'calender', component: UserCalender, canActivate: [AuthGuard] },
   { path: 'leaverequests', component: LeaveRequestComponent, canActivate: [AuthGuard] },
+  // Analytics Route - Protected by AuthGuard
+  { path: 'analytics', component: LeaveAnalytics, canActivate: [AuthGuard] },
   // HR/Admin Only Routes - Protected by RoleGuard
   { path: 'approves', component: UserApproves, canActivate: [RoleGuard], data: { roles: ['admin', 'hr'] } },
   // Admin Routes

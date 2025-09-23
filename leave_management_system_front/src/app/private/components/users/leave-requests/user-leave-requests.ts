@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastService } from '../../../../shared/services/toast.service';
 
 interface LeaveType {
   value: string;
@@ -64,7 +65,10 @@ export class LeaveRequestComponent implements OnInit {
     { title: 'Conference Leave', startDate: '2025-09-10', endDate: '2025-09-12' }
   ];
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private toastService: ToastService
+  ) {
     this.leaveRequestForm = this.createForm();
   }
 
@@ -242,8 +246,11 @@ export class LeaveRequestComponent implements OnInit {
   }
 
   private showNotification(message: string, type: 'success' | 'error'): void {
-    // Implement your notification service here
-    console.log(`${type.toUpperCase()}: ${message}`);
+    if (type === 'success') {
+      this.toastService.success('Leave Request Submitted', message);
+    } else {
+      this.toastService.error('Submission Failed', message);
+    }
   }
 
   formatDateRange(startDate: string, endDate: string): string {

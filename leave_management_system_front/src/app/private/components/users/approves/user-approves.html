@@ -135,7 +135,7 @@
                 <select
                   class="filter-select"
                   [(ngModel)]="filters.leaveType"
-                  (ngModelChange)="onFilterChange('leaveType', $event.target.value)"
+                  (change)="onFilterChange('leaveType', $event)"
                 >
                   <option value="all">Leave Type</option>
                   <option
@@ -149,7 +149,7 @@
                 <select
                   class="filter-select"
                   [(ngModel)]="filters.status"
-                  (ngModelChange)="onFilterChange('status', $event)"
+                  (change)="onFilterChange('status', $event)"
                 >
                   <option value="all">Status</option>
                   <option
@@ -163,7 +163,7 @@
                 <select
                   class="filter-select"
                   [(ngModel)]="filters.dateRange"
-                  (ngModelChange)="onFilterChange('dateRange', $event)"
+                  (change)="onFilterChange('dateRange', $event)"
                 >
                   <option value="all">Date Range</option>
                   <option
