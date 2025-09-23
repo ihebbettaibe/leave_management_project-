@@ -1,0 +1,24 @@
+# Angular specific
+leave_management_system_front/dist/
+leave_management_system_front/out-tsc/
+leave_management_system_front/tmp/
+leave_management_system_front/coverage/
+leave_management_system_front/e2e/test-output/
+leave_management_system_front/.angular/
+leave_management_system_front/.angular/
+
+# Node modules and dependency files
+leave_management_system_front/node_modules/
+leave_management_system_front/package-lock.json
+leave_management_system_front/yarn.lock
+
+
+
+# Nestjs specific
+leave-management-system_back/dist
+leave-management-system_back/node_modules
+leave-management-system_back/build
+leave-management-system_back/tmp
+
+# dotenv environment variable files
+leave-management-system_back/.env
