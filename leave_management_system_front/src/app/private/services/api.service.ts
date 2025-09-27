@@ -177,6 +177,12 @@ export class ApiService {
     return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/leave-requests/me`, { headers: this.getHeaders() });
   }
 
+  getAllPendingRequests(): Observable<ApiResponse<any[]>> {
+    let pendingLeaveRequests = this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/leave-requests/pending`, { headers: this.getHeaders() });
+    console.log(pendingLeaveRequests.subscribe);
+    return pendingLeaveRequests;
+  }
+
   // User APIs
   getCurrentUser(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/auth/me`, { headers: this.getHeaders() });

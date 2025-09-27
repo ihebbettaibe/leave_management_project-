@@ -31,13 +31,13 @@ export class LeaveRequest {
   leaveType: LeaveTypeEntity;
 
   @Column({ type: 'date' })
-  startDate: Date;
+  start_date: Date;
 
   @Column({ type: 'date' })
-  endDate: Date;
+  end_date: Date;
 
   @Column({ type: 'int' })
-  days: number;
+  days_requested: number;
 
   @Column({
     type: 'enum',
@@ -50,27 +50,27 @@ export class LeaveRequest {
   reason: string;
 
   @Column({ type: 'text', nullable: true })
-  comments: string;
+  rejection_reason: string;
 
   @Column({ type: 'boolean', default: false })
-  isHalfDay: boolean;
+  ishalfday: boolean;
 
   @Column({ type: 'text', nullable: true })
-  emergencyContact: string;
+  emergencycontact: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  managerEmail: string;
+  manageremail: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'reviewed_by' })
   reviewedBy: User;
 
   @Column({ type: 'timestamp', nullable: true })
-  reviewedAt: Date;
+  reviewed_at: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

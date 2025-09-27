@@ -77,8 +77,8 @@ export class EmailNotificationService {
     type: 'submitted' | LeaveRequestStatus
   ): EmailTemplate {
     const employee = leaveRequest.user;
-    const startDate = new Date(leaveRequest.startDate).toLocaleDateString();
-    const endDate = new Date(leaveRequest.endDate).toLocaleDateString();
+    const startDate = new Date(leaveRequest.start_date).toLocaleDateString();
+    const endDate = new Date(leaveRequest.end_date).toLocaleDateString();
     const leaveType = leaveRequest.leaveType?.name || 'Leave';
     
     let subject: string;

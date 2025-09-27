@@ -50,7 +50,7 @@ export class LeaveRequestsService {
 
     leaveRequest.status = status;
     leaveRequest.reviewedBy = { id: userId } as User;
-    leaveRequest.reviewedAt = new Date();
+    leaveRequest.reviewed_at = new Date();
 
     const updatedLeaveRequest = await this.leaveRequestRepository.save(leaveRequest);
 
@@ -64,14 +64,14 @@ export class LeaveRequestsService {
     return this.leaveRequestRepository.find({
       where: { user: { id: userId } },
       relations: ['leaveType'],
-      order: { createdAt: 'DESC' },
+      order: { created_at: 'DESC' },
     });
   }
 
   async getAllLeaveRequests(): Promise<LeaveRequest[]> {
     return this.leaveRequestRepository.find({
-      relations: ['user', 'leaveType', 'reviewedBy'],
-      order: { createdAt: 'DESC' },
+      relations: ['user', 'leaveType'],
+      order: { created_at: 'DESC' },
     });
   }
 
@@ -79,7 +79,7 @@ export class LeaveRequestsService {
     return this.leaveRequestRepository.find({
       where: { status: LeaveRequestStatus.PENDING },
       relations: ['user', 'leaveType'],
-      order: { createdAt: 'ASC' },
+      order: { created_at: 'ASC' },
     });
   }
 

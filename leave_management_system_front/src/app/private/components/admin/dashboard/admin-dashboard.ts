@@ -25,7 +25,8 @@ interface RecentActivity {
   styleUrls: ['./admin-dashboard.css'],
 })
 export class AdminDashboard implements OnInit {
-  UserCount = signal<number>(0)
+  UserCount = signal<number>(0);
+  pendingLeaveRequestsCount = signal<number>(0);
   stats: DashboardStats = {
     pendingRequests: 8,
     approvedRequests: 23,
@@ -58,14 +59,16 @@ export class AdminDashboard implements OnInit {
   ];
 
   constructor(private router: Router, private apiService: ApiService) {
-    effect(() => {
-      console.log(this.UserCount());
-    });
   }
 
   ngOnInit(): void {
     this.apiService.getAllUsersCount().subscribe(count => {
       this.UserCount.set(count);
+    });
+
+    this.apiService.getAllPendingRequests().subscribe(response => {
+      console.log('requests count',response.data.length);
+      this.pendingLeaveRequestsCount.set(response.data.length);
     });
   }
 

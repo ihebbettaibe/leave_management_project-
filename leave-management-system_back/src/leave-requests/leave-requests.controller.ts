@@ -6,8 +6,7 @@ import { LeaveRequestStatus } from './entities/leave-request.entity';
 
 @ApiTags('leave-requests')
 @Controller('leave-requests')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+
 export class LeaveRequestsController {
   constructor(private readonly leaveRequestsService: LeaveRequestsService) {}
 
@@ -34,7 +33,7 @@ export class LeaveRequestsController {
   @ApiOperation({ summary: 'Get all leave requests (HR/Admin only)' })
   @ApiResponse({ status: 200, description: 'All leave requests retrieved successfully' })
   async getAllLeaveRequests(@Request() req) {
-    const leaveRequests = await this.leaveRequestsService.getMockLeaveRequests();
+    const leaveRequests = await this.leaveRequestsService.getAllLeaveRequests();
     
     return {
       success: true,
