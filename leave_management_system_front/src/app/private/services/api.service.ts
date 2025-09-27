@@ -177,10 +177,31 @@ export class ApiService {
     return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/leave-requests/me`, { headers: this.getHeaders() });
   }
 
-  getAllPendingRequests(): Observable<ApiResponse<any[]>> {
-    let pendingLeaveRequests = this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/leave-requests/pending`, { headers: this.getHeaders() });
-    console.log(pendingLeaveRequests.subscribe);
-    return pendingLeaveRequests;
+getAllPendingRequests(): Observable<number> {
+  return this.http.get<ApiResponse<any[]>>(
+    `${this.apiUrl}/leave-requests/all`,
+    { headers: this.getHeaders() }
+  ).pipe(
+    map(response => response.data.filter(req => req.status === 'PENDING').length)
+  );
+}
+
+  getAllRejectedRequests():  Observable<number> {
+      return this.http.get<ApiResponse<any[]>>(
+      `${this.apiUrl}/leave-requests/all`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      map(response => response.data.filter(req => req.status === 'REJECTED').length)
+    );
+  }
+
+  getAllApprouvedRequests():  Observable<number> {
+      return this.http.get<ApiResponse<any[]>>(
+      `${this.apiUrl}/leave-requests/all`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      map(response => response.data.filter(req => req.status === 'APPROVED').length)
+    );
   }
 
   // User APIs

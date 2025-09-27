@@ -27,11 +27,13 @@ interface RecentActivity {
 export class AdminDashboard implements OnInit {
   UserCount = signal<number>(0);
   pendingLeaveRequestsCount = signal<number>(0);
+  approuvedLeaveRequestsCount = signal<number>(0);
+  rejectedLeaveRequestsCount = signal<number>(0);
   stats: DashboardStats = {
     pendingRequests: 8,
     approvedRequests: 23,
     rejectedRequests: 3,
-    totalLeaveTypes: 6,
+    totalLeaveTypes: 9,
     activeHolidays: 12,
   };
 
@@ -67,8 +69,15 @@ export class AdminDashboard implements OnInit {
     });
 
     this.apiService.getAllPendingRequests().subscribe(response => {
-      console.log('requests count',response.data.length);
-      this.pendingLeaveRequestsCount.set(response.data.length);
+      this.pendingLeaveRequestsCount.set(response);
+    });
+
+    this.apiService.getAllRejectedRequests().subscribe(response => {
+      this.rejectedLeaveRequestsCount.set(response);
+    });
+
+    this.apiService.getAllApprouvedRequests().subscribe(response => {
+      this.approuvedLeaveRequestsCount.set(response);
     });
   }
 
