@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { count, firstValueFrom, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ApiResponse<T> {
@@ -197,4 +197,17 @@ export class ApiService {
     const url = year ? `${this.apiUrl}/holidays?year=${year}` : `${this.apiUrl}/holidays`;
     return this.http.get<ApiResponse<any[]>>(url, { headers: this.getHeaders() });
   }
+
+
+  getAllUsers(): Observable<ProfileData[]> {
+    let usersList = this.http.get<ProfileData[]>(`${this.apiUrl}/users`, { headers: this.getHeaders() });
+    return usersList;
+  }
+
+  getAllUsersCount(): Observable<number> {
+  return this.getAllUsers().pipe(
+    map(users => users.length)
+  );
+}
+
 }

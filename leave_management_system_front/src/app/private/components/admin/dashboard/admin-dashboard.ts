@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
 
 interface DashboardStats {
-  totalEmployees: number;
   pendingRequests: number;
   approvedRequests: number;
   rejectedRequests: number;
@@ -25,8 +25,8 @@ interface RecentActivity {
   styleUrls: ['./admin-dashboard.css'],
 })
 export class AdminDashboard implements OnInit {
+  UserCount = signal<number>(0)
   stats: DashboardStats = {
-    totalEmployees: 45,
     pendingRequests: 8,
     approvedRequests: 23,
     rejectedRequests: 3,
@@ -57,9 +57,17 @@ export class AdminDashboard implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {
+    effect(() => {
+      console.log(this.UserCount());
+    });
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.apiService.getAllUsersCount().subscribe(count => {
+      this.UserCount.set(count);
+    });
+  }
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
