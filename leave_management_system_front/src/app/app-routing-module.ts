@@ -27,9 +27,9 @@ const routes: Routes = [
   // Analytics Route - Protected by AuthGuard
   { path: 'analytics', component: LeaveAnalytics, canActivate: [AuthGuard] },
   // HR/Admin Only Routes - Protected by RoleGuard
-  { path: 'approves', component: UserApproves, canActivate: [RoleGuard], data: { roles: ['admin', 'hr'] } },
+  { path: 'approves', component: UserApproves, canActivate: [RoleGuard], data: { roles: ['ADMIN', 'HR_MANAGER'] } },
   // Admin Routes
-  { path: 'admin/dashboard', component: AdminDashboard, canActivate: [RoleGuard], data: { roles: ['admin'] } },
+  { path: 'admin/dashboard', component: AdminDashboard, canActivate: [RoleGuard], data: { roles: ['ADMIN'] } },
   // Settings and other pages
   { path: 'settings', redirectTo: '/profile', pathMatch: 'full' },
   { path: 'help', redirectTo: '/dashboard', pathMatch: 'full' },
