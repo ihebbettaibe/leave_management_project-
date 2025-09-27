@@ -168,9 +168,18 @@ export class login implements OnInit, OnDestroy {
    */
   private redirectToDashboard(): void {
     console.log('Redirecting to dashboard...');
-    this.router.navigate(['/dashboard'], {
-      state: { user: this.currentUser },
-    });
+    let currentUserRole = this.authService.getCurrentUser();
+    console.log('currentUserRole', currentUserRole);
+    if(currentUserRole?.roles.includes('ADMIN')){ 
+      this.router.navigate(['/admin/dashboard'], {
+        state: { user: this.currentUser },
+      });
+      } else {
+        this.router.navigate(['/dashboard'], {
+        state: { user: this.currentUser },
+      });
+      }
+    
   }
 
   /**

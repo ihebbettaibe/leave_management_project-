@@ -46,6 +46,7 @@ export class RoleGuard implements CanActivate {
       const hasRequiredRole = allowedRoles.some(role => this.authService.hasRole(role));
       if (!hasRequiredRole) {
         // Redirect to unauthorized page or dashboard
+        console.log('hasRequiredRole', hasRequiredRole);
         this.router.navigate(['/dashboard']);
         return false;
       }
